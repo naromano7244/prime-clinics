@@ -16,7 +16,7 @@
       --muted:#9aa4b2;
       --text:#e8ecf3;
       --standard:#3a3f46;
-      --verified:#72BDDC; /* Prime brand blue */
+      --verified:#72BDDC;
     }
 
     *{box-sizing:border-box}
@@ -29,69 +29,73 @@
 
     /* TOP BAR */
     .topbar{
-      height:64px;
+      height:84px;
       background:#000;
-      border-bottom:1px solid rgba(255,255,255,.06);
+      border-bottom:1px solid rgba(255,255,255,.08);
       display:flex;
       align-items:center;
       justify-content:space-between;
-      padding:0 24px;
+      padding:0 32px;
       position:relative;
-      z-index:5;
+      z-index:10;
     }
-    .topbar img{height:34px}
+    .topbar img{
+      height:52px;
+    }
     .topbar a{
-      color:#cfd6e3;
+      color:#dbe3f1;
       text-decoration:none;
-      margin-left:24px;
-      font-size:14px;
+      margin-left:32px;
+      font-size:16px;
+      font-weight:500;
     }
     .topbar a:hover{color:#fff}
 
     /* LAYOUT */
     .wrap{
       display:grid;
-      grid-template-columns:360px 1fr;
-      height:calc(100vh - 64px);
+      grid-template-columns:380px 1fr;
+      height:calc(100vh - 84px);
     }
 
     /* SIDEBAR */
     .sidebar{
-      background:linear-gradient(180deg,#0c1017,#0b0e13);
-      padding:24px;
+      background:linear-gradient(180deg,#0d1118,#0b0e13);
+      padding:28px;
       overflow:auto;
-      border-right:1px solid rgba(255,255,255,.06);
+      border-right:1px solid rgba(255,255,255,.08);
+      position:relative;
     }
     .sidebar h1{
-      font-size:22px;
+      font-size:24px;
       line-height:1.3;
-      margin:0 0 12px;
+      margin:0 0 14px;
     }
     .sidebar p{
       color:var(--muted);
-      font-size:14px;
-      margin:0 0 20px;
+      font-size:15px;
+      margin:0 0 22px;
     }
 
     .filter h3{
       font-size:11px;
-      letter-spacing:.12em;
+      letter-spacing:.14em;
       color:#8f98a7;
-      margin:24px 0 8px;
+      margin:26px 0 10px;
     }
 
     .chips{
       display:flex;
       flex-wrap:wrap;
-      gap:8px;
+      gap:10px;
     }
     .chip{
-      padding:6px 12px;
+      padding:7px 14px;
       border-radius:999px;
       background:#151b26;
-      font-size:13px;
+      font-size:14px;
       cursor:pointer;
-      border:1px solid rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
     }
 
     .toggle{
@@ -99,14 +103,14 @@
       align-items:center;
       justify-content:space-between;
       background:#151b26;
-      padding:10px 12px;
-      border-radius:8px;
-      font-size:14px;
+      padding:12px 14px;
+      border-radius:10px;
+      font-size:15px;
     }
 
     .count{
-      margin-top:14px;
-      font-size:13px;
+      margin-top:16px;
+      font-size:14px;
       color:#9fb0c7;
     }
 
@@ -117,54 +121,77 @@
     .marker{
       width:14px;height:14px;border-radius:50%;
       background:var(--standard);
-      box-shadow:0 6px 14px rgba(0,0,0,.4);
+      box-shadow:0 6px 14px rgba(0,0,0,.45);
       cursor:pointer;
     }
     .marker.verified{
-      width:16px;height:16px;
+      width:18px;height:18px;
       background:var(--verified);
       box-shadow:
-        0 6px 16px rgba(0,0,0,.45),
-        0 0 0 6px rgba(114,189,220,.28);
+        0 8px 18px rgba(0,0,0,.5),
+        0 0 0 7px rgba(114,189,220,.28);
     }
 
     /* SIDE PANEL */
     .panel{
       position:absolute;
-      top:64px;
+      top:84px;
       right:0;
-      width:360px;
-      height:calc(100vh - 64px);
+      width:380px;
+      height:calc(100vh - 84px);
       background:var(--panel);
-      border-left:1px solid rgba(255,255,255,.08);
-      padding:22px;
+      border-left:1px solid rgba(255,255,255,.1);
+      padding:26px;
       transform:translateX(100%);
       transition:.25s ease;
-      z-index:4;
+      z-index:9;
     }
     .panel.open{transform:none}
     .panel h2{margin:0 0 6px}
     .badge{
       color:var(--verified);
-      font-size:14px;
-      margin:4px 0 12px;
+      font-size:15px;
+      font-weight:600;
+      margin:6px 0 14px;
     }
     .panel p{
       color:var(--muted);
-      font-size:14px;
+      font-size:15px;
       margin:6px 0;
     }
     .panel a{
       display:block;
-      margin-top:18px;
-      padding:12px;
+      margin-top:22px;
+      padding:14px;
       text-align:center;
       background:var(--verified);
       color:#001018;
-      font-weight:600;
+      font-weight:700;
       text-decoration:none;
-      border-radius:8px;
+      border-radius:10px;
     }
+
+    /* FOOTER */
+    .dir-footer{
+      position:absolute;
+      bottom:0;
+      left:0;
+      width:100%;
+      padding:16px 24px;
+      font-size:13px;
+      color:#9aa4b2;
+      border-top:1px solid rgba(255,255,255,.08);
+      background:#0b0e13;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .dir-footer a{
+      color:#9fb0c7;
+      text-decoration:none;
+      margin-left:18px;
+    }
+    .dir-footer a:hover{color:#fff}
 
     /* MOBILE */
     @media(max-width:900px){
@@ -227,6 +254,16 @@
     </div>
 
     <div class="count">3 clinics shown</div>
+
+    <!-- FOOTER -->
+    <div class="dir-footer">
+      <div>© 2025 Prime Regenerative</div>
+      <div>
+        <a href="https://primeregenerative.com/privacy" target="_blank">Privacy</a>
+        <a href="https://primeregenerative.com/terms-of-service-7568" target="_blank">Terms</a>
+        <a href="https://primeregenerative.com/verified-directory" target="_blank">Clinic Owner?</a>
+      </div>
+    </div>
   </aside>
 
   <!-- MAP -->
@@ -237,66 +274,66 @@
 <div class="panel" id="panel"></div>
 
 <script>
-mapboxgl.accessToken = 'mapboxgl.accessToken = 'pk.eyJ1IjoicHJpbWVyZWdlbmVyYXRpdmUiLCJhIjoiY21rZTk1dHB4MDRiYjNlcHBheTJubGh0ayJ9.R9IN8o-u1xnjry7a8BkMsw';
-';
+  /* MAPBOX TOKEN — CORRECT */
+  mapboxgl.accessToken =
+    'pk.eyJ1IjoicHJpbWVyZWdlbmVyYXRpdmUiLCJhIjoiY21rZTk1dHB4MDRiYjNlcHBheTJubGh0ayJ9.R9IN8o-u1xnjry7a8BkMsw';
 
-const map = new mapboxgl.Map({
-  container:'map',
-  style:'mapbox://styles/mapbox/light-v11',
-  center:[-98,39],
-  zoom:3.4
-});
-map.addControl(new mapboxgl.NavigationControl());
+  const map = new mapboxgl.Map({
+    container:'map',
+    style:'mapbox://styles/mapbox/light-v11',
+    center:[-98,39],
+    zoom:3.4
+  });
 
-const clinics = [
-  {
-    name:'Prime Ortho Center',
-    city:'Los Angeles, CA',
-    lat:34.05,lng:-118.25,
-    services:'PRP, Exosomes, Joint Pain',
-    verified:true,
-    site:'https://primeregenerative.com'
-  },
-  {
-    name:'Longevity Health',
-    city:'Miami, FL',
-    lat:25.76,lng:-80.19,
-    services:'IV Therapy, Hormone Therapy',
-    verified:true,
-    site:'https://primeregenerative.com'
-  },
-  {
-    name:'Restore Wellness',
-    city:'Austin, TX',
-    lat:30.26,lng:-97.74,
-    services:'Weight Loss, Peptides',
-    verified:false,
-    site:'https://primeregenerative.com'
-  }
-];
+  map.addControl(new mapboxgl.NavigationControl());
 
-const panel=document.getElementById('panel');
+  const clinics = [
+    {
+      name:'Prime Ortho Center',
+      city:'Los Angeles, CA',
+      lat:34.05,lng:-118.25,
+      services:'PRP, Exosomes, Joint Pain',
+      verified:true,
+      site:'https://primeregenerative.com'
+    },
+    {
+      name:'Longevity Health',
+      city:'Miami, FL',
+      lat:25.76,lng:-80.19,
+      services:'IV Therapy, Hormone Therapy',
+      verified:true,
+      site:'https://primeregenerative.com'
+    },
+    {
+      name:'Restore Wellness',
+      city:'Austin, TX',
+      lat:30.26,lng:-97.74,
+      services:'Weight Loss, Peptides',
+      verified:false,
+      site:'https://primeregenerative.com'
+    }
+  ];
 
-clinics.forEach(c=>{
-  const el=document.createElement('div');
-  el.className='marker'+(c.verified?' verified':'');
-  el.onclick=()=>{
-    panel.innerHTML=`
-      <h2>${c.name}</h2>
-      ${c.verified?'<div class="badge">✔ Prime Verified Clinic</div>':''}
-      <p>${c.city}</p>
-      <p>${c.services}</p>
-      <a href="${c.site}" target="_blank">Visit Clinic Website</a>
-    `;
-    panel.classList.add('open');
-  };
-  new mapboxgl.Marker(el).setLngLat([c.lng,c.lat]).addTo(map);
-});
+  const panel=document.getElementById('panel');
 
-map.on('click',()=>panel.classList.remove('open'));
+  clinics.forEach(c=>{
+    const el=document.createElement('div');
+    el.className='marker'+(c.verified?' verified':'');
+    el.onclick=()=>{
+      panel.innerHTML=`
+        <h2>${c.name}</h2>
+        ${c.verified?'<div class="badge">✔ Prime Verified Clinic</div>':''}
+        <p>${c.city}</p>
+        <p>${c.services}</p>
+        <a href="${c.site}" target="_blank">Visit Clinic Website</a>
+      `;
+      panel.classList.add('open');
+    };
+    new mapboxgl.Marker(el).setLngLat([c.lng,c.lat]).addTo(map);
+  });
+
+  map.on('click',()=>panel.classList.remove('open'));
 </script>
 
 </body>
 </html>
-
-
