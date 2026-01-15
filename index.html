@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Prime Regenerative Clinics Map</title>
+
+  <!-- Mapbox -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
+    }
+
+    #map {
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .marker {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 2px solid #111;
+      cursor: pointer;
+    }
+
+    .marker.verified {
+      border-color: #d4af37;
+      box-shadow: 0 0 0 4px rgba(212,175,55,0.25);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="map"></div>
+
+  <script>
+    mapboxgl.accessToken =
+      "pk.eyJ1IjoicHJpbWVyZWdlbmVyYXRpdmUiLCJhIjoiY21rZTk1dHB4MDRiYjNlcHBheTJubGh0ayJ9.R9IN8o-u1xnjry7a8BkMsw";
+
+    const map = new mapboxgl.Map({
+      container: "map",
+      style: "mapbox://styles/mapbox/light-v11",
+      center: [-98.35, 39.5],
+      zoom: 4
+    });
+
+    // ---- TEST DATA (simulates rows from your sheet) ----
+    const clinics = [
+      {
+        clinic_name: "Prime Ortho Naples",
+        lat: 26.142,
+        lng: -81.794,
+        tier: "verified"
+      },
+      {
+        clinic_name: "Functional Health Atlanta",
+        lat: 33.74899,
+        lng: -84.38798,
+        tier: "standard"
+      }
+    ];
+
+    // ---- Render markers ----
+    clinics.forEach(c => {
+      const el = document.createElement("div");
+      el.className = "marker" + (c.tier === "verified" ? " verified" : "");
+
+      el.addEventListener("click", () => {
+        alert(c.clinic_name + (c.tier === "verified" ? " (Verified)" : ""));
+      });
+
+      new mapboxgl.Marker(el)
+        .setLngLat([c.lng, c.lat])
+        .addTo(map);
+    });
+  </script>
+
+</body>
+</html>
