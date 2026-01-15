@@ -1,85 +1,745 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Prime Regenerative Clinics Map</title>
+  <title>Prime Regenerative Clinic Directory</title>
 
-  <!-- Mapbox -->
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css" rel="stylesheet" />
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js"></script>
 
   <style>
-    body {
-      margin: 0;
+    :root{
+      --bg:#0b0f17;
+      --card:#0f172a;
+      --muted:#9aa4b2;
+      --text:#e6edf6;
+      --border:rgba(255,255,255,.10);
+
+      --standard:#111827;      /* charcoal */
+      --verified:#2f6fed;      /* SaaS blue */
+
+      --panelW: 380px;
+      --sidebarW: 340px;
+      --radius: 14px;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
+      color: var(--text);
+      background: #070a11;
     }
 
-    #map {
-      width: 100vw;
+    /* Layout */
+    .app{
+      display:grid;
+      grid-template-columns: var(--sidebarW) 1fr;
       height: 100vh;
+      width: 100vw;
+      overflow:hidden;
     }
 
-    .marker {
+    .sidebar{
+      background: rgba(10,14,24,.95);
+      border-right: 1px solid var(--border);
+      padding: 18px 16px;
+      overflow:auto;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom: 14px;
+    }
+    .logoDot{
+      width: 12px; height: 12px; border-radius: 999px;
+      background: var(--verified);
+      box-shadow: 0 0 0 4px rgba(47,111,237,.20);
+    }
+    .brand h1{
+      font-size: 14px;
+      margin:0;
+      letter-spacing: .3px;
+      text-transform: uppercase;
+      color: rgba(230,237,246,.9);
+    }
+
+    .headline{
+      margin: 10px 0 16px;
+      font-size: 18px;
+      line-height: 1.25;
+      font-weight: 800;
+    }
+    .subtext{
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .section{
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .label{
+      font-size: 12px;
+      color: rgba(230,237,246,.7);
+      margin: 0 0 8px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+
+    select, .toggle, .chip{
+      width:100%;
+    }
+
+    select{
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      outline:none;
+      font-size: 14px;
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      cursor:pointer;
+      user-select:none;
+      width:auto;
+      font-size: 13px;
+      color: rgba(230,237,246,.9);
+      transition: transform .06s ease, background .15s ease;
+    }
+    .chip:active{ transform: scale(.98); }
+    .chip.on{
+      background: rgba(47,111,237,.18);
+      border-color: rgba(47,111,237,.55);
+    }
+    .chip input{ display:none; }
+
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .toggle{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+    }
+    .toggle span{
+      font-size: 14px;
+      color: rgba(230,237,246,.92);
+    }
+    .switch{
+      width: 44px; height: 26px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      position:relative;
+      cursor:pointer;
+      flex: 0 0 auto;
+    }
+    .switch::after{
+      content:"";
+      position:absolute;
+      top:3px; left:3px;
+      width:20px; height:20px;
+      border-radius:999px;
+      background:#fff;
+      transition: transform .15s ease;
+    }
+    .switch.on{
+      background: rgba(47,111,237,.55);
+    }
+    .switch.on::after{
+      transform: translateX(18px);
+    }
+
+    .btnRow{
+      display:flex;
+      gap:10px;
+      margin-top: 12px;
+    }
+    .btn{
+      flex:1;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: rgba(230,237,246,.95);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .btn.primary{
+      border-color: rgba(47,111,237,.55);
+      background: rgba(47,111,237,.18);
+    }
+
+    .count{
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* Map */
+    .mapWrap{
+      position:relative;
+      height:100%;
+      width:100%;
+    }
+    #map{
+      height:100%;
+      width:100%;
+    }
+
+    /* Right panel (desktop) */
+    .overlayScrim{
+      position:absolute;
+      inset:0;
+      background: rgba(0,0,0,.25);
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .15s ease;
+      z-index: 20;
+    }
+    .overlayScrim.on{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .panel{
+      position:absolute;
+      top: 14px;
+      right: 14px;
+      bottom: 14px;
+      width: var(--panelW);
+      background: rgba(10,14,24,.96);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 14px 40px rgba(0,0,0,.45);
+      transform: translateX(calc(100% + 24px));
+      transition: transform .18s ease;
+      z-index: 30;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+    }
+    .panel.open{
+      transform: translateX(0);
+    }
+    .panelHead{
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid var(--border);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .panelHead h2{
+      margin:0;
+      font-size: 18px;
+      line-height: 1.2;
+      font-weight: 900;
+    }
+    .closeBtn{
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: rgba(230,237,246,.9);
+      border-radius: 12px;
+      padding: 8px 10px;
+      cursor:pointer;
+      font-weight: 800;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      font-size: 12px;
+      color: rgba(230,237,246,.9);
+      margin-top: 8px;
+      width: fit-content;
+    }
+    .badge.verified{
+      border-color: rgba(47,111,237,.60);
+      background: rgba(47,111,237,.18);
+    }
+    .panelBody{
+      padding: 14px;
+      overflow:auto;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+    .kv{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      color: rgba(230,237,246,.85);
+      font-size: 13px;
+    }
+    .kv b{ color: rgba(230,237,246,.95); }
+    .tags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .tag{
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      font-size: 12px;
+      color: rgba(230,237,246,.88);
+    }
+    .cta{
+      margin-top: 8px;
+      display:flex;
+      gap:10px;
+    }
+    .cta a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      text-decoration:none;
+      font-weight: 900;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(47,111,237,.60);
+      background: rgba(47,111,237,.18);
+      color: rgba(230,237,246,.97);
+      width:100%;
+    }
+    .smallNote{
+      font-size: 12px;
+      color: rgba(230,237,246,.55);
+      line-height: 1.4;
+      margin-top: 6px;
+    }
+
+    /* Markers */
+    .marker{
       width: 14px;
       height: 14px;
       border-radius: 999px;
       background: #fff;
-      border: 2px solid #111;
-      cursor: pointer;
+      border: 2px solid var(--standard);
+      cursor:pointer;
+      box-shadow: 0 6px 14px rgba(0,0,0,.25);
+    }
+    .marker.verified{
+      border-color: var(--verified);
+      box-shadow:
+        0 6px 14px rgba(0,0,0,.28),
+        0 0 0 6px rgba(47,111,237,.18);
     }
 
-    .marker.verified {
-      border-color: #d4af37;
-      box-shadow: 0 0 0 4px rgba(212,175,55,0.25);
+    /* Mobile adjustments */
+    @media (max-width: 920px){
+      .app{
+        grid-template-columns: 1fr;
+      }
+      .sidebar{
+        position:absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: auto;
+        z-index: 40;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      .mapWrap{
+        padding-top: 260px; /* room for sidebar */
+      }
+
+      .panel{
+        top:auto;
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        width:auto;
+        height: 52vh;
+        border-radius: 18px;
+        transform: translateY(calc(100% + 24px));
+      }
+      .panel.open{
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
+
 <body>
+<div class="app">
 
-  <div id="map"></div>
+  <!-- LEFT SIDEBAR (Zillow-style) -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logoDot"></div>
+      <h1>Prime Regenerative</h1>
+    </div>
 
-  <script>
-    mapboxgl.accessToken =
-      "pk.eyJ1IjoicHJpbWVyZWdlbmVyYXRpdmUiLCJhIjoiY21rZTk1dHB4MDRiYjNlcHBheTJubGh0ayJ9.R9IN8o-u1xnjry7a8BkMsw";
+    <div class="headline">Highly Recommended Regenerative & Functional Clinics Across the USA</div>
+    <p class="subtext">
+      Clinics listed here have been reviewed and approved through the Prime Regenerative screening process.
+    </p>
 
-    const map = new mapboxgl.Map({
-      container: "map",
-      style: "mapbox://styles/mapbox/light-v11",
-      center: [-98.35, 39.5],
-      zoom: 4
+    <div class="section">
+      <div class="label">Type</div>
+      <select id="typeSelect">
+        <option value="all">All</option>
+        <option value="regenerative">Regenerative</option>
+        <option value="functional">Functional</option>
+      </select>
+    </div>
+
+    <div class="section">
+      <div class="label">Services</div>
+      <div class="chips" id="servicesChips"></div>
+      <div class="btnRow">
+        <button class="btn" id="clearServicesBtn" type="button">Clear services</button>
+        <button class="btn" id="resetBtn" type="button">Reset all</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="toggle">
+        <span>Verified only</span>
+        <div class="switch" id="verifiedSwitch" role="switch" aria-checked="false" tabindex="0"></div>
+      </div>
+      <div class="count" id="countText">Loading…</div>
+    </div>
+  </aside>
+
+  <!-- MAP + PANEL -->
+  <main class="mapWrap">
+    <div id="map"></div>
+
+    <div class="overlayScrim" id="scrim"></div>
+
+    <section class="panel" id="panel" aria-live="polite">
+      <div class="panelHead">
+        <div>
+          <h2 id="panelName">Clinic</h2>
+          <div class="badge" id="panelBadge" style="display:none"></div>
+        </div>
+        <button class="closeBtn" id="closeBtn" type="button">✕</button>
+      </div>
+
+      <div class="panelBody">
+        <div class="kv" id="panelMeta"></div>
+
+        <div>
+          <div class="label" style="margin:0 0 8px">Services</div>
+          <div class="tags" id="panelServices"></div>
+        </div>
+
+        <div class="cta">
+          <a id="panelWebsite" href="#" target="_blank" rel="noopener">Visit Clinic Website →</a>
+        </div>
+
+        <div class="smallNote">
+          Listed clinics are independent medical practices. Information is subject to change.
+        </div>
+      </div>
+    </section>
+  </main>
+
+</div>
+
+<script>
+  // ===========================
+  // CONFIG
+  // ===========================
+  mapboxgl.accessToken = "pk.eyJ1IjoicHJpbWVyZWdlbmVyYXRpdmUiLCJhIjoiY21rZTk1dHB4MDRiYjNlcHBheTJubGh0ayJ9.R9IN8o-u1xnjry7a8BkMsw";
+
+  // Launch services list (locked)
+  const SERVICES = [
+    "PRP",
+    "Exosomes",
+    "Wharton’s Jelly",
+    "Shockwave",
+    "Peptides",
+    "Hormone Therapy",
+    "IV Therapy",
+    "Joint Pain",
+    "Hair Loss",
+    "Weight Loss"
+  ];
+
+  // Demo clinics until your sheet is live
+  // (Later we will replace this array with fetch(JSON_ENDPOINT))
+  const CLINICS_DEMO = [
+    {
+      id: "demo-1",
+      clinic_name: "Prime Ortho Naples",
+      slug: "prime-ortho-naples",
+      type: "regenerative",
+      city: "Naples",
+      state: "FL",
+      lat: 26.1420,
+      lng: -81.7948,
+      services: ["PRP","Exosomes","Joint Pain","Shockwave"],
+      tier: "verified",
+      website: "https://primeregenerative.com"
+    },
+    {
+      id: "demo-2",
+      clinic_name: "Functional Wellness Austin",
+      slug: "functional-wellness-austin",
+      type: "functional",
+      city: "Austin",
+      state: "TX",
+      lat: 30.2672,
+      lng: -97.7431,
+      services: ["Hormone Therapy","Weight Loss","IV Therapy","Peptides"],
+      tier: "standard",
+      website: "https://primeregenerative.com"
+    },
+    {
+      id: "demo-3",
+      clinic_name: "Coastal Regenerative LA",
+      slug: "coastal-regenerative-la",
+      type: "regenerative",
+      city: "Los Angeles",
+      state: "CA",
+      lat: 34.0522,
+      lng: -118.2437,
+      services: ["PRP","Hair Loss","Exosomes"],
+      tier: "verified",
+      website: "https://primeregenerative.com"
+    }
+  ];
+
+  // ===========================
+  // STATE
+  // ===========================
+  const state = {
+    type: "all",
+    verifiedOnly: false,
+    selectedServices: new Set(),
+    clinics: CLINICS_DEMO.slice()
+  };
+
+  // ===========================
+  // MAP INIT
+  // ===========================
+  const map = new mapboxgl.Map({
+    container: "map",
+    style: "mapbox://styles/mapbox/light-v11",
+    center: [-98.35, 39.5],
+    zoom: 4.8
+  });
+
+  map.addControl(new mapboxgl.NavigationControl(), "top-right");
+
+  // Fit to USA (optional but nice)
+  map.on("load", () => {
+    // Bound to lower 48-ish; keeps it USA-focused
+    map.fitBounds([[-125, 24], [-66, 49]], { padding: 50, duration: 0 });
+    renderAll();
+  });
+
+  // ===========================
+  // UI: Services chips
+  // ===========================
+  const servicesChips = document.getElementById("servicesChips");
+
+  function renderServiceChips(){
+    servicesChips.innerHTML = "";
+    SERVICES.forEach(name => {
+      const chip = document.createElement("label");
+      chip.className = "chip" + (state.selectedServices.has(name) ? " on" : "");
+      chip.innerHTML = `<input type="checkbox" />${name}`;
+      chip.addEventListener("click", () => {
+        if (state.selectedServices.has(name)) state.selectedServices.delete(name);
+        else state.selectedServices.add(name);
+        renderAll();
+      });
+      servicesChips.appendChild(chip);
+    });
+  }
+
+  // ===========================
+  // Filters
+  // ===========================
+  document.getElementById("typeSelect").addEventListener("change", (e) => {
+    state.type = e.target.value;
+    renderAll();
+  });
+
+  const verifiedSwitch = document.getElementById("verifiedSwitch");
+  function setVerifiedSwitch(on){
+    state.verifiedOnly = !!on;
+    verifiedSwitch.classList.toggle("on", state.verifiedOnly);
+    verifiedSwitch.setAttribute("aria-checked", String(state.verifiedOnly));
+  }
+  verifiedSwitch.addEventListener("click", () => {
+    setVerifiedSwitch(!state.verifiedOnly);
+    renderAll();
+  });
+  verifiedSwitch.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setVerifiedSwitch(!state.verifiedOnly);
+      renderAll();
+    }
+  });
+
+  document.getElementById("clearServicesBtn").addEventListener("click", () => {
+    state.selectedServices.clear();
+    renderAll();
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    state.type = "all";
+    setVerifiedSwitch(false);
+    state.selectedServices.clear();
+    document.getElementById("typeSelect").value = "all";
+    closePanel();
+    renderAll();
+  });
+
+  // ===========================
+  // Filter logic
+  // ===========================
+  function matchesFilters(c){
+    if (state.type !== "all" && c.type !== state.type) return false;
+    if (state.verifiedOnly && c.tier !== "verified") return false;
+
+    if (state.selectedServices.size > 0) {
+      const hasAll = [...state.selectedServices].every(s => (c.services || []).includes(s));
+      if (!hasAll) return false;
+    }
+
+    return true;
+  }
+
+  function filteredClinics(){
+    return state.clinics.filter(matchesFilters);
+  }
+
+  // ===========================
+  // Markers + panel
+  // ===========================
+  let markers = [];
+
+  function clearMarkers(){
+    markers.forEach(m => m.remove());
+    markers = [];
+  }
+
+  function openPanel(c){
+    const panel = document.getElementById("panel");
+    const scrim = document.getElementById("scrim");
+
+    document.getElementById("panelName").textContent = c.clinic_name || "Clinic";
+
+    // Badge
+    const badge = document.getElementById("panelBadge");
+    if (c.tier === "verified"){
+      badge.style.display = "inline-flex";
+      badge.className = "badge verified";
+      badge.textContent = "Verified Provider";
+    } else {
+      badge.style.display = "none";
+    }
+
+    // Meta
+    const typeLabel = c.type === "functional" ? "Functional Medicine" : "Regenerative Medicine";
+    document.getElementById("panelMeta").innerHTML =
+      `<div><b>Location:</b> ${c.city || ""}${c.state ? ", " + c.state : ""}</div>
+       <div><b>Type:</b> ${typeLabel}</div>`;
+
+    // Services tags
+    const wrap = document.getElementById("panelServices");
+    wrap.innerHTML = "";
+    (c.services || []).forEach(s => {
+      const t = document.createElement("div");
+      t.className = "tag";
+      t.textContent = s;
+      wrap.appendChild(t);
     });
 
-    // ---- TEST DATA (simulates rows from your sheet) ----
-    const clinics = [
-      {
-        clinic_name: "Prime Ortho Naples",
-        lat: 26.142,
-        lng: -81.794,
-        tier: "verified"
-      },
-      {
-        clinic_name: "Functional Health Atlanta",
-        lat: 33.74899,
-        lng: -84.38798,
-        tier: "standard"
-      }
-    ];
+    // Website
+    const a = document.getElementById("panelWebsite");
+    a.href = c.website || "#";
+    a.style.opacity = c.website ? "1" : ".55";
+    a.style.pointerEvents = c.website ? "auto" : "none";
 
-    // ---- Render markers ----
+    panel.classList.add("open");
+    scrim.classList.add("on");
+  }
+
+  function closePanel(){
+    document.getElementById("panel").classList.remove("open");
+    document.getElementById("scrim").classList.remove("on");
+  }
+
+  document.getElementById("closeBtn").addEventListener("click", closePanel);
+  document.getElementById("scrim").addEventListener("click", closePanel);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closePanel();
+  });
+
+  function renderMarkers(clinics){
+    clearMarkers();
+
     clinics.forEach(c => {
       const el = document.createElement("div");
       el.className = "marker" + (c.tier === "verified" ? " verified" : "");
+      el.addEventListener("click", () => openPanel(c));
 
-      el.addEventListener("click", () => {
-        alert(c.clinic_name + (c.tier === "verified" ? " (Verified)" : ""));
-      });
-
-      new mapboxgl.Marker(el)
-        .setLngLat([c.lng, c.lat])
-        .addTo(map);
+      const marker = new mapboxgl.Marker(el).setLngLat([c.lng, c.lat]).addTo(map);
+      markers.push(marker);
     });
-  </script>
+  }
 
+  // ===========================
+  // Render everything
+  // ===========================
+  function renderCount(n){
+    const t = document.getElementById("countText");
+    t.textContent = `${n} clinic${n === 1 ? "" : "s"} shown`;
+  }
+
+  function renderAll(){
+    renderServiceChips();
+    const list = filteredClinics();
+    renderMarkers(list);
+    renderCount(list.length);
+  }
+</script>
 </body>
 </html>
+
