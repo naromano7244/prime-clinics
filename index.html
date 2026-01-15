@@ -316,21 +316,28 @@
 
   const panel=document.getElementById('panel');
 
-  clinics.forEach(c=>{
-    const el=document.createElement('div');
-    el.className='marker'+(c.verified?' verified':'');
-    el.onclick=()=>{
-      panel.innerHTML=`
-        <h2>${c.name}</h2>
-        ${c.verified?'<div class="badge">✔ Prime Verified Clinic</div>':''}
-        <p>${c.city}</p>
-        <p>${c.services}</p>
-        <a href="${c.site}" target="_blank">Visit Clinic Website</a>
-      `;
-      panel.classList.add('open');
-    };
-    new mapboxgl.Marker(el).setLngLat([c.lng,c.lat]).addTo(map);
-  });
+clinics.forEach(c=>{
+  const el = document.createElement('div');
+  el.className = 'marker' + (c.verified ? ' verified' : '');
+
+  el.onclick = (e) => {
+    e.stopPropagation(); // IMPORTANT
+
+    panel.innerHTML = `
+      <h2>${c.name}</h2>
+      ${c.verified ? '<div class="badge">✔ Prime Verified Clinic</div>' : ''}
+      <p>${c.city}</p>
+      <p>${c.services}</p>
+      <a href="${c.site}" target="_blank">Visit Clinic Website</a>
+    `;
+    panel.classList.add('open');
+  };
+
+  new mapboxgl.Marker(el)
+    .setLngLat([c.lng, c.lat])
+    .addTo(map);
+});
+
 
   map.on('click',()=>panel.classList.remove('open'));
 </script>
