@@ -346,21 +346,23 @@
     }
 
     /* Markers */
-    .marker{
-      width: 14px;
-      height: 14px;
-      border-radius: 999px;
-      background: #fff;
-      border: 2px solid var(--standard);
-      cursor:pointer;
-      box-shadow: 0 6px 14px rgba(0,0,0,.25);
-    }
-    .marker.verified{
-      border-color: var(--verified);
-      box-shadow:
-        0 6px 14px rgba(0,0,0,.28),
-        0 0 0 6px rgba(47,111,237,.18);
-    }
+ .marker{
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--standard);   /* solid */
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(0,0,0,.25);
+}
+
+.marker.verified{
+  background: var(--verified);   /* solid blue */
+  box-shadow:
+    0 6px 15px rgba(0,0,0,.28),
+    0 0 0 6px rgba(47,111,237,.25); /* glow */
+}
+
 
     /* Mobile adjustments */
     @media (max-width: 920px){
