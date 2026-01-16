@@ -64,10 +64,12 @@
     /* SIDEBAR */
     .sidebar{
       background:linear-gradient(180deg,#0d1118,#0b0e13);
-      padding:22px 18px 72px;
+      padding:22px 18px 18px;
       overflow:auto;
       border-right:1px solid var(--line);
       position:relative;
+      display:flex;
+      flex-direction:column;
     }
     .sidebar h1{
       font-size:28px;
@@ -233,6 +235,8 @@
       flex-direction:column;
       gap:12px;
       padding-bottom:20px;
+      flex:1;
+      min-height:0;
     }
     .card{
       background:linear-gradient(180deg,var(--card),var(--card2));
@@ -560,11 +564,9 @@
 
     /* FOOTER (sidebar) */
     .dir-footer{
-      position:absolute;
-      bottom:0;
-      left:0;
-      right:0;
-      padding:16px 18px;
+      position:relative;
+      margin-top:auto;
+      padding:16px 0;
       font-size:12px;
       color:#b9c6dd;
       border-top:1px solid rgba(255,255,255,.08);
@@ -572,7 +574,7 @@
       display:flex;
       justify-content:space-between;
       align-items:center;
-      z-index:2;
+      flex-shrink:0;
     }
     .dir-footer a{
       color:#cfe0ff;
@@ -692,7 +694,8 @@
     container:'map',
     style:'mapbox://styles/mapbox/light-v11',
     center:[-98,39],
-    zoom:3.4
+    zoom:3.4,
+    renderWorldCopies: false
   });
   map.addControl(new mapboxgl.NavigationControl());
 
@@ -1011,7 +1014,10 @@
         openPanel(c);
       };
 
-      const marker = new mapboxgl.Marker(el)
+      const marker = new mapboxgl.Marker({
+        element: el,
+        anchor: 'center'
+      })
         .setLngLat([c.lng, c.lat])
         .addTo(map);
 
