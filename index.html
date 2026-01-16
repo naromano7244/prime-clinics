@@ -593,6 +593,20 @@
       .contactGrid{grid-template-columns:1fr}
     }
   </style>
+    /* ===== EMBED MODE (sales page iframe) ===== */
+    body.embed .topbar,
+    body.embed .dir-footer{
+      display:none !important;
+    }
+    body.embed .wrap{
+      height:100vh;
+    }
+    body.embed .panel{
+      top:0;
+      height:100vh;
+    }
+  </style>
+
 </head>
 
 <body>
@@ -685,9 +699,16 @@
 <div class="panel" id="panel"></div>
 
 <script>
+  /* ===== EMBED MODE (sales page iframe) ===== */
+  if (new URLSearchParams(window.location.search).has('embed')) {
+    document.body.classList.add('embed');
+  }
+
   /* MAPBOX TOKEN */
   mapboxgl.accessToken =
     'pk.eyJ1IjoicHJpbWVyZWdlbmVyYXRpdmUiLCJhIjoiY21rZTk1dHB4MDRiYjNlcHBheTJubGh0ayJ9.R9IN8o-u1xnjry7a8BkMsw';
+</script>
+
 
   /* APPS SCRIPT ENDPOINT (APPROVED-ONLY JSON) */
   const ENDPOINT = 'https://script.google.com/macros/s/AKfycbxs9SA3C7rRMgoxWNTFqZ5Ouyy603WpIgczlwvANtlvmHWfCI5QSwXb0BJvax5MqCGF/exec';
