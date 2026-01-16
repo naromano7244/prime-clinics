@@ -64,12 +64,19 @@
     /* SIDEBAR */
     .sidebar{
       background:linear-gradient(180deg,#0d1118,#0b0e13);
-      padding:22px 18px 18px;
-      overflow:auto;
+      padding:22px 18px 0;
+      overflow:hidden;
       border-right:1px solid var(--line);
       position:relative;
       display:flex;
       flex-direction:column;
+      height:100%;
+    }
+    .sidebar-scroll{
+      flex:1;
+      overflow-y:auto;
+      overflow-x:hidden;
+      padding:0 0 16px 0;
     }
     .sidebar h1{
       font-size:28px;
@@ -90,8 +97,8 @@
       position:sticky;
       top:0;
       z-index:3;
-      padding:10px 10px 12px;
-      margin:0 -10px 10px;
+      padding:10px 0 12px;
+      margin:0 0 10px;
       background:linear-gradient(180deg,#0d1118 80%, rgba(13,17,24,0.95) 90%, rgba(13,17,24,0));
       backdrop-filter:saturate(1.1) blur(10px);
     }
@@ -234,9 +241,6 @@
       display:flex;
       flex-direction:column;
       gap:12px;
-      padding-bottom:20px;
-      flex:1;
-      min-height:0;
     }
     .card{
       background:linear-gradient(180deg,var(--card),var(--card2));
@@ -564,9 +568,7 @@
 
     /* FOOTER (sidebar) */
     .dir-footer{
-      position:relative;
-      margin-top:auto;
-      padding:16px 0;
+      padding:16px 18px;
       font-size:12px;
       color:#b9c6dd;
       border-top:1px solid rgba(255,255,255,.08);
@@ -611,6 +613,7 @@
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
+    <div class="sidebar-scroll">
     <div class="search">
       <h1>Browse our Directory of Top Regenerative and Functional Medicine Providers</h1>
       <p>Vetted, trusted clinics approved through our rigorous Prime Regenerative screening process.</p>
@@ -663,6 +666,7 @@
 
     <!-- Clinic list -->
     <div class="list" id="list"></div>
+    </div>
 
     <!-- FOOTER -->
     <div class="dir-footer">
@@ -695,7 +699,8 @@
     style:'mapbox://styles/mapbox/light-v11',
     center:[-98,39],
     zoom:3.4,
-    renderWorldCopies: false
+    renderWorldCopies: false,
+    maxBounds: [[-180, -85], [180, 85]]
   });
   map.addControl(new mapboxgl.NavigationControl());
 
