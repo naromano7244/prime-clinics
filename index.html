@@ -16,7 +16,7 @@
       --muted:#9aa4b2;
       --text:#e8ecf3;
       --standard:#3a3f46;
-      --verified:#72BDDC;
+      --verified:#7DCBEA;
       --card:#121824;
       --card2:#0f151f;
       --line:rgba(255,255,255,.08);
@@ -49,6 +49,7 @@
       margin-left:32px;
       font-size:16px;
       font-weight:500;
+      transition: color 0.2s;
     }
     .topbar a:hover{color:#fff}
 
@@ -69,16 +70,17 @@
       position:relative;
     }
     .sidebar h1{
-      font-size:22px;
+      font-size:28px;
       line-height:1.25;
-      margin:0 0 10px;
+      margin:0 0 12px;
       letter-spacing:.2px;
+      font-weight:700;
     }
     .sidebar p{
-      color:#c7d2e4; /* brighter than muted */
+      color:#c7d2e4;
       font-size:14px;
-      margin:0 0 14px;
-      line-height:1.45;
+      margin:0 0 16px;
+      line-height:1.5;
     }
 
     /* Search */
@@ -93,13 +95,18 @@
     }
     .search input{
       width:100%;
-      padding:12px 12px;
+      padding:14px 16px;
       border-radius:12px;
       border:1px solid rgba(255,255,255,.10);
       background:#0f1520;
       color:var(--text);
       font-size:14px;
       outline:none;
+      transition: all 0.2s;
+    }
+    .search input:focus{
+      border-color:rgba(125,203,234,.4);
+      box-shadow: 0 0 0 3px rgba(125,203,234,.12);
     }
     .search input::placeholder{color:#93a0b6}
     .search-row{
@@ -113,14 +120,18 @@
       border:1px solid rgba(255,255,255,.10);
       background:#0f1520;
       color:#cfe0ff;
-      padding:10px 12px;
+      padding:10px 14px;
       border-radius:12px;
       font-weight:600;
       cursor:pointer;
       font-size:13px;
       white-space:nowrap;
+      transition: all 0.2s;
     }
-    .clearBtn:hover{filter:brightness(1.06)}
+    .clearBtn:hover{
+      filter:brightness(1.1);
+      transform: translateY(-1px);
+    }
 
     /* Active filter pills */
     .pills{
@@ -133,7 +144,7 @@
       display:inline-flex;
       gap:8px;
       align-items:center;
-      padding:8px 10px;
+      padding:8px 12px;
       border-radius:999px;
       background:#0f1520;
       border:1px solid rgba(255,255,255,.10);
@@ -141,16 +152,21 @@
       font-size:12px;
       cursor:pointer;
       user-select:none;
+      transition: all 0.2s;
     }
     .pill b{font-weight:700}
     .pill .x{opacity:.8}
-    .pill:hover{filter:brightness(1.06)}
+    .pill:hover{
+      filter:brightness(1.1);
+      transform: translateY(-1px);
+    }
 
     .filter h3{
       font-size:11px;
       letter-spacing:.14em;
       color:#aeb7c6;
-      margin:18px 0 10px;
+      margin:20px 0 12px;
+      font-weight:700;
     }
 
     .chips{
@@ -159,17 +175,23 @@
       gap:10px;
     }
     .chip{
-      padding:8px 14px;
+      padding:10px 16px;
       border-radius:999px;
       background:#151b26;
       font-size:14px;
       cursor:pointer;
       border:1px solid rgba(255,255,255,.10);
       user-select:none;
+      transition: all 0.2s;
+    }
+    .chip:hover{
+      filter:brightness(1.08);
+      transform: translateY(-1px);
     }
     .chip.active{
-      border-color:rgba(114,189,220,.85);
-      box-shadow:0 0 0 4px rgba(114,189,220,.16);
+      border-color:rgba(125,203,234,.85);
+      box-shadow:0 0 0 4px rgba(125,203,234,.20);
+      background:#1a2633;
     }
 
     /* Toggle */
@@ -178,54 +200,72 @@
       align-items:center;
       justify-content:space-between;
       background:#151b26;
-      padding:12px 14px;
+      padding:14px 16px;
       border-radius:12px;
       font-size:14px;
       border:1px solid rgba(255,255,255,.10);
     }
     .toggle span{color:#dbe3f1}
-    .toggle input{transform:scale(1.05)}
+    .toggle input{transform:scale(1.1)}
 
     /* Count + breakdown */
     .count{
-      margin-top:14px;
-      font-size:14px;
+      margin-top:16px;
+      font-size:15px;
       color:#dbe3f1;
       display:flex;
       gap:8px;
       align-items:baseline;
       justify-content:space-between;
+      font-weight:600;
     }
     .count small{
       color:#b9c6dd;
       font-size:12px;
       white-space:nowrap;
+      font-weight:400;
     }
 
     /* Clinic list */
     .list{
-      margin-top:14px;
+      margin-top:16px;
       display:flex;
       flex-direction:column;
-      gap:10px;
-      padding-bottom:96px; /* leave room above footer */
+      gap:12px;
+      padding-bottom:96px;
     }
     .card{
       background:linear-gradient(180deg,var(--card),var(--card2));
       border:1px solid rgba(255,255,255,.10);
       border-radius:14px;
-      padding:12px;
+      padding:14px;
       cursor:pointer;
       box-shadow:0 10px 20px rgba(0,0,0,.20);
+      transition: all 0.2s;
     }
-    .card:hover{filter:brightness(1.06)}
+    .card:hover{
+      filter:brightness(1.08);
+      transform: translateY(-2px);
+      box-shadow:0 14px 28px rgba(0,0,0,.25);
+    }
+    .card.verified{
+      border-color:rgba(125,203,234,.3);
+      box-shadow:
+        0 10px 20px rgba(0,0,0,.20),
+        0 0 0 1px rgba(125,203,234,.15);
+    }
+    .card.verified:hover{
+      box-shadow:
+        0 14px 28px rgba(0,0,0,.25),
+        0 0 0 1px rgba(125,203,234,.25);
+    }
     .cardTop{
       display:flex;
-      gap:10px;
+      gap:12px;
       align-items:center;
     }
     .cardLogo{
-      width:44px;height:44px;
+      width:48px;height:48px;
       border-radius:12px;
       object-fit:contain;
       background:#0b0e13;
@@ -239,15 +279,16 @@
       flex:1;
     }
     .cardTitle strong{
-      font-size:14px;
-      line-height:1.2;
+      font-size:15px;
+      line-height:1.3;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
+      font-weight:600;
     }
     .cardTitle span{
-      font-size:12px;
-      color:#c7d2e4; /* not muted */
+      font-size:13px;
+      color:#c7d2e4;
       margin-top:3px;
       white-space:nowrap;
       overflow:hidden;
@@ -255,21 +296,22 @@
     }
     .tag{
       font-size:11px;
-      padding:6px 10px;
+      padding:6px 12px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
       background:#0f1520;
       color:#dbe3f1;
       flex:0 0 auto;
+      font-weight:600;
     }
     .tag.verified{
-      border-color:rgba(114,189,220,.6);
-      box-shadow:0 0 0 4px rgba(114,189,220,.12);
+      border-color:rgba(125,203,234,.7);
+      box-shadow:0 0 0 4px rgba(125,203,234,.15);
       color:var(--verified);
       font-weight:700;
     }
     .cardServices{
-      margin-top:10px;
+      margin-top:12px;
       display:flex;
       flex-wrap:wrap;
       gap:8px;
@@ -288,17 +330,27 @@
 
     /* MARKERS */
     .marker{
-      width:14px;height:14px;border-radius:50%;
+      width:16px;height:16px;border-radius:50%;
       background:var(--standard);
       box-shadow:0 6px 14px rgba(0,0,0,.45);
       cursor:pointer;
+      transition: all 0.2s;
+      border: 2px solid rgba(255,255,255,.2);
+    }
+    .marker:hover{
+      transform: scale(1.15);
     }
     .marker.verified{
-      width:18px;height:18px;
+      width:20px;height:20px;
       background:var(--verified);
       box-shadow:
         0 8px 18px rgba(0,0,0,.5),
-        0 0 0 7px rgba(114,189,220,.28);
+        0 0 0 8px rgba(125,203,234,.35);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 8px 18px rgba(0,0,0,.5), 0 0 0 8px rgba(125,203,234,.35); }
+      50% { box-shadow: 0 8px 18px rgba(0,0,0,.5), 0 0 0 12px rgba(125,203,234,.2); }
     }
 
     /* SIDE PANEL (DETAIL) */
@@ -306,27 +358,28 @@
       position:absolute;
       top:84px;
       right:0;
-      width:420px;
+      width:440px;
       max-width:92vw;
       height:calc(100vh - 84px);
       background:linear-gradient(180deg,#101622,#0c111a);
       border-left:1px solid rgba(255,255,255,.10);
-      padding:22px 22px 0;
+      padding:24px 24px 0;
       transform:translateX(100%);
-      transition:.25s ease;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       z-index:9;
       overflow:auto;
+      box-shadow: -10px 0 40px rgba(0,0,0,.4);
     }
     .panel.open{transform:none}
 
     .panelHeader{
       display:flex;
-      gap:14px;
-      align-items:center;
-      margin-bottom:14px;
+      gap:16px;
+      align-items:flex-start;
+      margin-bottom:16px;
     }
     .panelLogo{
-      width:76px;height:76px;
+      width:80px;height:80px;
       border-radius:16px;
       object-fit:contain;
       background:#0b0e13;
@@ -341,78 +394,167 @@
       margin:0;
       font-size:24px;
       letter-spacing:.2px;
-      line-height:1.2;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      line-height:1.3;
+      font-weight:700;
     }
     .badge{
       display:inline-flex;
       gap:8px;
       align-items:center;
-      margin-top:8px;
+      margin-top:10px;
       color:var(--verified);
       font-size:14px;
       font-weight:800;
-      text-shadow:0 0 18px rgba(114,189,220,.45);
+      text-shadow:0 0 20px rgba(125,203,234,.5);
+    }
+    .badge svg{
+      width:18px;
+      height:18px;
+      fill:currentColor;
+      filter: drop-shadow(0 0 8px rgba(125,203,234,.6));
     }
 
     .panelMeta{
-      margin-top:14px;
-      border-top:1px solid rgba(255,255,255,.08);
-      border-bottom:1px solid rgba(255,255,255,.08);
-      padding:12px 0;
+      margin-top:18px;
+      border-top:1px solid rgba(255,255,255,.10);
+      border-bottom:1px solid rgba(255,255,255,.10);
+      padding:16px 0;
     }
     .metaRow{
       display:flex;
-      gap:10px;
+      gap:12px;
       align-items:flex-start;
-      margin:8px 0;
-      color:#dbe3f1; /* NOT muted */
+      margin:12px 0;
+      color:#dbe3f1;
       font-size:14px;
-      line-height:1.4;
+      line-height:1.5;
     }
     .metaIcon{
-      width:22px;
-      opacity:.95;
+      width:20px;
+      height:20px;
+      opacity:.85;
       flex:0 0 auto;
-      margin-top:1px;
-      filter:drop-shadow(0 0 10px rgba(114,189,220,.10));
+      margin-top:2px;
+      stroke:currentColor;
+      fill:none;
+      stroke-width:2;
+      stroke-linecap:round;
+      stroke-linejoin:round;
     }
 
     .desc{
-      margin:14px 0 14px;
-      color:#dbe3f1; /* brighter */
+      margin:18px 0;
+      color:#dbe3f1;
       font-size:15px;
-      line-height:1.55;
-
-      /* Clamp only after ~5 lines */
-      display:-webkit-box;
-      -webkit-line-clamp:5;
-      -webkit-box-orient:vertical;
-      overflow:hidden;
+      line-height:1.65;
+      background:rgba(255,255,255,.02);
+      padding:16px;
+      border-radius:12px;
+      border-left:3px solid rgba(125,203,234,.3);
     }
+
+    .contactGrid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin:18px 0;
+    }
+    .contactBtn{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:14px;
+      background:#151b26;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:12px;
+      color:#dbe3f1;
+      text-decoration:none;
+      font-size:14px;
+      font-weight:600;
+      transition: all 0.2s;
+    }
+    .contactBtn svg{
+      width:18px;
+      height:18px;
+      stroke:currentColor;
+      fill:none;
+      stroke-width:2;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+    .contactBtn:hover{
+      filter:brightness(1.12);
+      transform:translateY(-2px);
+      box-shadow:0 6px 16px rgba(0,0,0,.2);
+    }
+
+    .infoCards{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin:18px 0;
+    }
+    .infoCard{
+      background:rgba(255,255,255,.02);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:10px;
+      padding:12px;
+      text-align:center;
+    }
+    .infoCard-label{
+      font-size:11px;
+      color:#b9c6dd;
+      text-transform:uppercase;
+      letter-spacing:.1em;
+      margin-bottom:6px;
+      font-weight:600;
+    }
+    .infoCard-value{
+      font-size:14px;
+      color:#dbe3f1;
+      font-weight:600;
+    }
+    .infoCard-value.yes{color:#7DCBEA}
+    .infoCard-value.no{color:#93a0b6}
 
     .panelCta{
       position:sticky;
       bottom:0;
-      padding:16px 0 18px;
-      background:linear-gradient(180deg, rgba(12,17,26,0), #0c111a 35%);
-      backdrop-filter: blur(6px);
+      padding:20px 0 24px;
+      background:linear-gradient(180deg, rgba(12,17,26,0), #0c111a 40%);
+      backdrop-filter: blur(8px);
     }
     .panelCta a{
-      display:block;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
       width:100%;
-      padding:16px;
+      padding:18px;
       text-align:center;
-      background:var(--verified);
+      background:linear-gradient(135deg, var(--verified), #5FBBE0);
       color:#001018;
       font-weight:900;
       text-decoration:none;
       border-radius:14px;
-      box-shadow:0 10px 24px rgba(114,189,220,.20);
+      box-shadow:0 12px 28px rgba(125,203,234,.25);
+      transition: all 0.2s;
+      font-size:16px;
     }
-    .panelCta a:hover{filter:brightness(1.05)}
+    .panelCta a:hover{
+      transform:translateY(-2px);
+      box-shadow:0 16px 36px rgba(125,203,234,.35);
+    }
+    .panelCta svg{
+      width:20px;
+      height:20px;
+      stroke:currentColor;
+      fill:none;
+      stroke-width:2.5;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
 
     /* FOOTER (sidebar) */
     .dir-footer{
@@ -420,7 +562,7 @@
       bottom:0;
       left:0;
       width:100%;
-      padding:14px 10px;
+      padding:16px 10px;
       font-size:12px;
       color:#b9c6dd;
       border-top:1px solid rgba(255,255,255,.08);
@@ -428,12 +570,13 @@
       display:flex;
       justify-content:space-between;
       align-items:center;
-      margin-top:16px;
+      margin-top:20px;
     }
     .dir-footer a{
       color:#cfe0ff;
       text-decoration:none;
       margin-left:14px;
+      transition: color 0.2s;
     }
     .dir-footer a:hover{color:#fff}
 
@@ -441,8 +584,9 @@
     @media(max-width:900px){
       .wrap{grid-template-columns:1fr}
       .sidebar{display:none}
-      .panel{width:100%; padding:18px 18px 0}
+      .panel{width:100%; padding:20px 20px 0}
       .panelTitle h2{font-size:22px}
+      .contactGrid{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -464,8 +608,8 @@
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="search">
-      <h1>Highly Recommended Regenerative & Functional Clinics Across the USA</h1>
-      <p>Clinics listed here have been reviewed and approved through the Prime Regenerative screening process.</p>
+      <h1>Find Your Perfect Regenerative Clinic</h1>
+      <p>Vetted, trusted clinics approved through our rigorous Prime Regenerative screening process.</p>
 
       <input id="q" type="text" placeholder="Search clinic, city, or state…" />
 
@@ -558,14 +702,14 @@
   const qEl = document.getElementById('q');
 
   // Filter state
-  let TYPE = 'all';          // all | regenerative | functional
-  let SERVICES = new Set();  // multi-select services
-  let VERIFIED_ONLY = false; // boolean
-  let Q = '';                // search query
+  let TYPE = 'all';
+  let SERVICES = new Set();
+  let VERIFIED_ONLY = false;
+  let Q = '';
 
   // Data
-  let ALL = [];              // normalized clinic objects
-  let markers = [];          // Mapbox markers
+  let ALL = [];
+  let markers = [];
   const markerById = new Map();
 
   function normalizeType(row){
@@ -594,6 +738,13 @@
     return 'https://' + u;
   }
 
+  function formatPhone(phone){
+    const p = String(phone || '').replace(/\D/g,'');
+    if (p.length === 10) return `(${p.slice(0,3)}) ${p.slice(3,6)}-${p.slice(6)}`;
+    if (p.length === 11) return `+${p[0]} (${p.slice(1,4)}) ${p.slice(4,7)}-${p.slice(7)}`;
+    return phone || '';
+  }
+
   function toClinic(row){
     const services = normalizeServices(row);
     const cityState = [row.city, row.state].filter(Boolean).join(', ');
@@ -608,10 +759,15 @@
       lat: Number(row.lat),
       lng: Number(row.lng),
       phone: String(row.phone || ''),
+      phoneFormatted: formatPhone(row.phone),
       website: safeSite(row.website),
+      email: row.public_email || '',
       services,
       description: row.description || '',
-      logo_url: row.logo_url || ''
+      logo_url: row.logo_url || '',
+      accepting: row.accepting_new_patients || 'Unknown',
+      telehealth: row.telehealth || 'No',
+      financing: row.financing_available || 'Unknown'
     };
   }
 
@@ -656,25 +812,75 @@
 
     const typeLabel = c.type === 'functional' ? 'Functional Medicine' : 'Regenerative Medicine';
 
+    const verifiedBadge = c.verified 
+      ? `<div class="badge">
+          <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path></svg>
+          Prime Verified Clinic
+        </div>`
+      : `<div class="badge" style="opacity:.5;color:#dbe3f1;text-shadow:none;font-weight:600">Prime Directory Listing</div>`;
+
+    const phoneBtn = c.phone 
+      ? `<a href="tel:${c.phone}" class="contactBtn">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path></svg>
+          ${c.phoneFormatted || 'Call'}
+        </a>`
+      : '';
+
+    const emailBtn = c.email 
+      ? `<a href="mailto:${c.email}" class="contactBtn">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          Email
+        </a>`
+      : '';
+
+    const contactSection = (phoneBtn || emailBtn)
+      ? `<div class="contactGrid">${phoneBtn}${emailBtn}</div>`
+      : '';
+
     panel.innerHTML = `
       <div class="panelHeader">
         ${logo}
         <div class="panelTitle">
           <h2>${c.name}</h2>
-          ${c.verified ? `<div class="badge">✓ Prime Verified Clinic</div>` : `<div class="badge" style="opacity:.45;color:#dbe3f1;text-shadow:none;font-weight:700">Prime Directory Listing</div>`}
+          ${verifiedBadge}
         </div>
       </div>
 
       <div class="panelMeta">
-        <div class="metaRow"><span class="metaIcon">🏥</span><div>${typeLabel}</div></div>
-        <div class="metaRow"><span class="metaIcon">📍</span><div>${c.city || c.address}</div></div>
-        ${c.services.length ? `<div class="metaRow"><span class="metaIcon">🧬</span><div>${c.services.join(', ')}</div></div>` : ''}
+        <div class="metaRow">
+          <svg class="metaIcon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          <div>${typeLabel}</div>
+        </div>
+        <div class="metaRow">
+          <svg class="metaIcon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          <div>${c.city || c.address}</div>
+        </div>
+        ${c.services.length ? `<div class="metaRow">
+          <svg class="metaIcon" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"></path></svg>
+          <div>${c.services.join(', ')}</div>
+        </div>` : ''}
       </div>
 
       ${c.description ? `<div class="desc">${c.description}</div>` : ''}
 
+      ${contactSection}
+
+      <div class="infoCards">
+        <div class="infoCard">
+          <div class="infoCard-label">New Patients</div>
+          <div class="infoCard-value ${c.accepting.toLowerCase() === 'yes' ? 'yes' : c.accepting.toLowerCase() === 'no' ? 'no' : ''}">${c.accepting}</div>
+        </div>
+        <div class="infoCard">
+          <div class="infoCard-label">Telehealth</div>
+          <div class="infoCard-value ${c.telehealth.toLowerCase() === 'yes' ? 'yes' : 'no'}">${c.telehealth}</div>
+        </div>
+      </div>
+
       <div class="panelCta">
-        <a href="${c.website}" target="_blank" rel="noopener">Visit Clinic Website</a>
+        <a href="${c.website}" target="_blank" rel="noopener">
+          Visit Clinic Website
+          <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        </a>
       </div>
     `;
     panel.classList.add('open');
@@ -738,6 +944,7 @@
     listEl.innerHTML = list.map(c => {
       const tagClass = c.verified ? 'tag verified' : 'tag';
       const tagText  = c.verified ? 'Prime Verified' : 'Standard';
+      const cardClass = c.verified ? 'card verified' : 'card';
       const logo = c.logo_url
         ? `<img class="cardLogo" src="${c.logo_url}" alt="${c.name} logo">`
         : `<div class="cardLogo" aria-hidden="true"></div>`;
@@ -745,7 +952,7 @@
       const topSvcs = c.services.slice(0,3).map(s => `<span class="svcPill">${s}</span>`).join('');
 
       return `
-        <div class="card" data-id="${c.id}">
+        <div class="${cardClass}" data-id="${c.id}">
           <div class="cardTop">
             ${logo}
             <div class="cardTitle">
@@ -839,11 +1046,15 @@
       render();
     });
 
-    // Search
+    // Search with debounce
+    let searchTimeout;
     qEl.addEventListener('input', () => {
-      Q = qEl.value.trim().toLowerCase();
-      setPills();
-      render();
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        Q = qEl.value.trim().toLowerCase();
+        setPills();
+        render();
+      }, 300);
     });
 
     // Clear
