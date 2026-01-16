@@ -342,11 +342,9 @@
       background:var(--standard);
       box-shadow:0 6px 14px rgba(0,0,0,.45);
       cursor:pointer;
-      transition: all 0.2s;
       border: 2px solid rgba(255,255,255,.2);
     }
     .marker:hover{
-      transform: scale(1.15);
     }
     .marker.verified{
       width:20px;height:20px;
@@ -695,14 +693,21 @@
   const ENDPOINT = 'https://script.google.com/macros/s/AKfycbxs9SA3C7rRMgoxWNTFqZ5Ouyy603WpIgczlwvANtlvmHWfCI5QSwXb0BJvax5MqCGF/exec';
 
   const map = new mapboxgl.Map({
-    container:'map',
-    style:'mapbox://styles/mapbox/light-v11',
-    center:[-98,39],
-    zoom:3.4,
-    renderWorldCopies: false,
-    maxBounds: [[-180, -85], [180, 85]]
-  });
-  map.addControl(new mapboxgl.NavigationControl());
+  container: 'map',
+  style: 'mapbox://styles/mapbox/light-v11',
+  center: [-98, 39],
+  zoom: 3.4,
+  renderWorldCopies: false,
+  maxBounds: [[-180, -85], [180, 85]]
+});
+
+map.addControl(new mapboxgl.NavigationControl());
+
+map.on('load', () => {
+  map.resize();
+  map.jumpTo({ center: [-98, 39], zoom: 3.4 });
+});
+
 
   const panel = document.getElementById('panel');
   const countEl = document.getElementById('count');
