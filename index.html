@@ -64,7 +64,7 @@
     /* SIDEBAR */
     .sidebar{
       background:linear-gradient(180deg,#0d1118,#0b0e13);
-      padding:22px 18px 18px;
+      padding:22px 18px 72px;
       overflow:auto;
       border-right:1px solid var(--line);
       position:relative;
@@ -90,8 +90,8 @@
       z-index:3;
       padding:10px 10px 12px;
       margin:0 -10px 10px;
-      background:linear-gradient(180deg,#0d1118 60%, rgba(13,17,24,0));
-      backdrop-filter:saturate(1.1) blur(6px);
+      background:linear-gradient(180deg,#0d1118 80%, rgba(13,17,24,0.95) 90%, rgba(13,17,24,0));
+      backdrop-filter:saturate(1.1) blur(10px);
     }
     .search input{
       width:100%;
@@ -232,7 +232,7 @@
       display:flex;
       flex-direction:column;
       gap:12px;
-      padding-bottom:96px;
+      padding-bottom:20px;
     }
     .card{
       background:linear-gradient(180deg,var(--card),var(--card2));
@@ -346,7 +346,9 @@
       box-shadow:
         0 8px 18px rgba(0,0,0,.5),
         0 0 0 8px rgba(125,203,234,.35);
-      animation: pulse 2s infinite;
+    }
+    .marker.verified:hover{
+      animation: pulse 1.5s ease-in-out;
     }
     @keyframes pulse {
       0%, 100% { box-shadow: 0 8px 18px rgba(0,0,0,.5), 0 0 0 8px rgba(125,203,234,.35); }
@@ -558,11 +560,11 @@
 
     /* FOOTER (sidebar) */
     .dir-footer{
-      position:sticky;
+      position:absolute;
       bottom:0;
       left:0;
-      width:100%;
-      padding:16px 10px;
+      right:0;
+      padding:16px 18px;
       font-size:12px;
       color:#b9c6dd;
       border-top:1px solid rgba(255,255,255,.08);
@@ -570,7 +572,7 @@
       display:flex;
       justify-content:space-between;
       align-items:center;
-      margin-top:20px;
+      z-index:2;
     }
     .dir-footer a{
       color:#cfe0ff;
@@ -608,7 +610,7 @@
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="search">
-      <h1>Find Your Perfect Regenerative Clinic</h1>
+      <h1>Browse our Directory of Top Regenerative and Functional Medicine Providers</h1>
       <p>Vetted, trusted clinics approved through our rigorous Prime Regenerative screening process.</p>
 
       <input id="q" type="text" placeholder="Search clinic, city, or state…" />
@@ -727,7 +729,7 @@
   function normalizeServices(row){
     return String(row.services || '')
       .split(',')
-      .map(s => s.trim())
+      .map(s => s.trim().replace(/[\u2018\u2019]/g, "'")) // normalize curly apostrophes
       .filter(Boolean);
   }
 
@@ -748,6 +750,15 @@
   function toClinic(row){
     const services = normalizeServices(row);
     const cityState = [row.city, row.state].filter(Boolean).join(', ');
+    
+    // Safely normalize yes/no fields
+    const safeYesNo = (val) => {
+      const v = String(val || '').toLowerCase().trim();
+      if (v === 'yes') return 'Yes';
+      if (v === 'no') return 'No';
+      return 'Unknown';
+    };
+    
     return {
       id: row.id || row.slug || row.clinic_name || Math.random().toString(36).slice(2),
       name: row.clinic_name || row.name || 'Unnamed Clinic',
@@ -765,8 +776,8 @@
       services,
       description: row.description || '',
       logo_url: row.logo_url || '',
-      accepting: row.accepting_new_patients || 'Unknown',
-      telehealth: row.telehealth || 'No',
+      accepting: safeYesNo(row.accepting_new_patients),
+      telehealth: safeYesNo(row.telehealth),
       financing: row.financing_available || 'Unknown'
     };
   }
@@ -779,9 +790,10 @@
 
   function hasServices(c){
     if (SERVICES.size === 0) return true;
-    const set = new Set(c.services.map(s => s.toLowerCase()));
+    const set = new Set(c.services.map(s => s.toLowerCase().replace(/[\u2018\u2019]/g, "'")));
     for (const want of SERVICES){
-      if (!set.has(want)) return false;
+      const normalized = want.toLowerCase().replace(/[\u2018\u2019]/g, "'");
+      if (!set.has(normalized)) return false;
     }
     return true;
   }
@@ -868,11 +880,11 @@
       <div class="infoCards">
         <div class="infoCard">
           <div class="infoCard-label">New Patients</div>
-          <div class="infoCard-value ${c.accepting.toLowerCase() === 'yes' ? 'yes' : c.accepting.toLowerCase() === 'no' ? 'no' : ''}">${c.accepting}</div>
+          <div class="infoCard-value ${c.accepting === 'Yes' ? 'yes' : c.accepting === 'No' ? 'no' : ''}">${c.accepting}</div>
         </div>
         <div class="infoCard">
           <div class="infoCard-label">Telehealth</div>
-          <div class="infoCard-value ${c.telehealth.toLowerCase() === 'yes' ? 'yes' : 'no'}">${c.telehealth}</div>
+          <div class="infoCard-value ${c.telehealth === 'Yes' ? 'yes' : c.telehealth === 'No' ? 'no' : ''}">${c.telehealth}</div>
         </div>
       </div>
 
@@ -1094,5 +1106,3 @@
 
 </body>
 </html>
-
-
