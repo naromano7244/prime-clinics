@@ -344,8 +344,6 @@
       cursor:pointer;
       border: 2px solid rgba(255,255,255,.2);
     }
-    .marker:hover{
-    }
     .marker.verified{
       width:20px;height:20px;
       background:var(--verified);
@@ -592,7 +590,7 @@
       .panelTitle h2{font-size:22px}
       .contactGrid{grid-template-columns:1fr}
     }
-  </style>
+
     /* ===== EMBED MODE (sales page iframe) ===== */
     body.embed .topbar,
     body.embed .dir-footer{
@@ -606,7 +604,6 @@
       height:100vh;
     }
   </style>
-
 </head>
 
 <body>
@@ -626,58 +623,58 @@
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-scroll">
-    <div class="search">
-      <h1>Browse our Directory of Top Regenerative and Functional Medicine Providers</h1>
-      <p>Vetted, trusted clinics approved through our rigorous Prime Regenerative screening process.</p>
+      <div class="search">
+        <h1>Browse our Directory of Top Regenerative and Functional Medicine Providers</h1>
+        <p>Vetted, trusted clinics approved through our rigorous Prime Regenerative screening process.</p>
 
-      <input id="q" type="text" placeholder="Search clinic, city, or state…" />
+        <input id="q" type="text" placeholder="Search clinic, city, or state…" />
 
-      <div class="search-row">
-        <div class="pills" id="pills"></div>
-        <button class="clearBtn" id="clearBtn" type="button">Clear</button>
+        <div class="search-row">
+          <div class="pills" id="pills"></div>
+          <button class="clearBtn" id="clearBtn" type="button">Clear</button>
+        </div>
       </div>
-    </div>
 
-    <div class="filter" id="typeFilter">
-      <h3>TYPE</h3>
-      <div class="chips">
-        <div class="chip active" data-type="all">All</div>
-        <div class="chip" data-type="regenerative">Regenerative</div>
-        <div class="chip" data-type="functional">Functional</div>
+      <div class="filter" id="typeFilter">
+        <h3>TYPE</h3>
+        <div class="chips">
+          <div class="chip active" data-type="all">All</div>
+          <div class="chip" data-type="regenerative">Regenerative</div>
+          <div class="chip" data-type="functional">Functional</div>
+        </div>
       </div>
-    </div>
 
-    <div class="filter" id="serviceFilter">
-      <h3>SERVICES</h3>
-      <div class="chips">
-        <div class="chip" data-service="PRP">PRP</div>
-        <div class="chip" data-service="Exosomes">Exosomes</div>
-        <div class="chip" data-service="Wharton's Jelly">Wharton's Jelly</div>
-        <div class="chip" data-service="Shockwave">Shockwave</div>
-        <div class="chip" data-service="Peptides">Peptides</div>
-        <div class="chip" data-service="Hormone Therapy">Hormone Therapy</div>
-        <div class="chip" data-service="IV Therapy">IV Therapy</div>
-        <div class="chip" data-service="Joint Pain">Joint Pain</div>
-        <div class="chip" data-service="Hair Loss">Hair Loss</div>
-        <div class="chip" data-service="Weight Loss">Weight Loss</div>
+      <div class="filter" id="serviceFilter">
+        <h3>SERVICES</h3>
+        <div class="chips">
+          <div class="chip" data-service="PRP">PRP</div>
+          <div class="chip" data-service="Exosomes">Exosomes</div>
+          <div class="chip" data-service="Wharton's Jelly">Wharton's Jelly</div>
+          <div class="chip" data-service="Shockwave">Shockwave</div>
+          <div class="chip" data-service="Peptides">Peptides</div>
+          <div class="chip" data-service="Hormone Therapy">Hormone Therapy</div>
+          <div class="chip" data-service="IV Therapy">IV Therapy</div>
+          <div class="chip" data-service="Joint Pain">Joint Pain</div>
+          <div class="chip" data-service="Hair Loss">Hair Loss</div>
+          <div class="chip" data-service="Weight Loss">Weight Loss</div>
+        </div>
       </div>
-    </div>
 
-    <div class="filter">
-      <h3>VERIFIED</h3>
-      <div class="toggle">
-        <span>Prime Verified only</span>
-        <input type="checkbox" id="verifiedOnly">
+      <div class="filter">
+        <h3>VERIFIED</h3>
+        <div class="toggle">
+          <span>Prime Verified only</span>
+          <input type="checkbox" id="verifiedOnly">
+        </div>
       </div>
-    </div>
 
-    <div class="count" id="count">
-      <span>Loading clinics…</span>
-      <small id="breakdown"></small>
-    </div>
+      <div class="count" id="count">
+        <span>Loading clinics…</span>
+        <small id="breakdown"></small>
+      </div>
 
-    <!-- Clinic list -->
-    <div class="list" id="list"></div>
+      <!-- Clinic list -->
+      <div class="list" id="list"></div>
     </div>
 
     <!-- FOOTER -->
@@ -707,28 +704,25 @@
   /* MAPBOX TOKEN */
   mapboxgl.accessToken =
     'pk.eyJ1IjoicHJpbWVyZWdlbmVyYXRpdmUiLCJhIjoiY21rZTk1dHB4MDRiYjNlcHBheTJubGh0ayJ9.R9IN8o-u1xnjry7a8BkMsw';
-</script>
-
 
   /* APPS SCRIPT ENDPOINT (APPROVED-ONLY JSON) */
   const ENDPOINT = 'https://script.google.com/macros/s/AKfycbxs9SA3C7rRMgoxWNTFqZ5Ouyy603WpIgczlwvANtlvmHWfCI5QSwXb0BJvax5MqCGF/exec';
 
   const map = new mapboxgl.Map({
-  container: 'map',
-  style: 'mapbox://styles/mapbox/light-v11',
-  center: [-98, 39],
-  zoom: 3.4,
-  renderWorldCopies: false,
-  maxBounds: [[-180, -85], [180, 85]]
-});
+    container: 'map',
+    style: 'mapbox://styles/mapbox/light-v11',
+    center: [-98, 39],
+    zoom: 3.4,
+    renderWorldCopies: false,
+    maxBounds: [[-180, -85], [180, 85]]
+  });
 
-map.addControl(new mapboxgl.NavigationControl());
+  map.addControl(new mapboxgl.NavigationControl());
 
-map.on('load', () => {
-  map.resize();
-  map.jumpTo({ center: [-98, 39], zoom: 3.4 });
-});
-
+  map.on('load', () => {
+    map.resize();
+    map.jumpTo({ center: [-98, 39], zoom: 3.4 });
+  });
 
   const panel = document.getElementById('panel');
   const countEl = document.getElementById('count');
@@ -745,7 +739,6 @@ map.on('load', () => {
 
   // Data
   let ALL = [];
-  let markers = [];
   const markerById = new Map();
 
   function normalizeType(row){
@@ -763,7 +756,7 @@ map.on('load', () => {
   function normalizeServices(row){
     return String(row.services || '')
       .split(',')
-      .map(s => s.trim().replace(/[\u2018\u2019]/g, "'")) // normalize curly apostrophes
+      .map(s => s.trim().replace(/[\u2018\u2019]/g, "'"))
       .filter(Boolean);
   }
 
@@ -784,15 +777,14 @@ map.on('load', () => {
   function toClinic(row){
     const services = normalizeServices(row);
     const cityState = [row.city, row.state].filter(Boolean).join(', ');
-    
-    // Safely normalize yes/no fields
+
     const safeYesNo = (val) => {
       const v = String(val || '').toLowerCase().trim();
       if (v === 'yes') return 'Yes';
       if (v === 'no') return 'No';
       return 'Unknown';
     };
-    
+
     return {
       id: row.id || row.slug || row.clinic_name || Math.random().toString(36).slice(2),
       name: row.clinic_name || row.name || 'Unnamed Clinic',
@@ -846,7 +838,6 @@ map.on('load', () => {
   }
 
   function createAllMarkers(){
-    // Create markers once for all clinics
     ALL.forEach(c => {
       if (!Number.isFinite(c.lat) || !Number.isFinite(c.lng)) return;
 
@@ -858,30 +849,19 @@ map.on('load', () => {
         openPanel(c);
       };
 
-      const marker = new mapboxgl.Marker({
-        element: el,
-        anchor: 'center'
-      })
+      const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
         .setLngLat([c.lng, c.lat])
         .addTo(map);
 
-      markers.push(marker);
       markerById.set(c.id, marker);
     });
   }
 
   function updateMarkerVisibility(){
-    // Show/hide markers based on filters instead of recreating them
     ALL.forEach(c => {
       const marker = markerById.get(c.id);
       if (!marker) return;
-
-      const el = marker.getElement();
-      if (passesFilters(c)) {
-        el.style.display = '';
-      } else {
-        el.style.display = 'none';
-      }
+      marker.getElement().style.display = passesFilters(c) ? '' : 'none';
     });
   }
 
@@ -892,21 +872,21 @@ map.on('load', () => {
 
     const typeLabel = c.type === 'functional' ? 'Functional Medicine' : 'Regenerative Medicine';
 
-    const verifiedBadge = c.verified 
+    const verifiedBadge = c.verified
       ? `<div class="badge">
           <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path></svg>
           Prime Verified Clinic
         </div>`
       : `<div class="badge" style="opacity:.5;color:#dbe3f1;text-shadow:none;font-weight:600">Prime Directory Listing</div>`;
 
-    const phoneBtn = c.phone 
+    const phoneBtn = c.phone
       ? `<a href="tel:${c.phone}" class="contactBtn">
           <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path></svg>
           ${c.phoneFormatted || 'Call'}
         </a>`
       : '';
 
-    const emailBtn = c.email 
+    const emailBtn = c.email
       ? `<a href="mailto:${c.email}" class="contactBtn">
           <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
           Email
@@ -1002,18 +982,15 @@ map.on('load', () => {
   }
 
   function syncUIFromState(){
-    // Type chips
     document.querySelectorAll('#typeFilter .chip').forEach(chip => {
       chip.classList.toggle('active', (chip.dataset.type || 'all') === TYPE);
     });
 
-    // Service chips
     document.querySelectorAll('#serviceFilter .chip').forEach(chip => {
       const svc = (chip.dataset.service || '').toLowerCase();
       chip.classList.toggle('active', SERVICES.has(svc));
     });
 
-    // Verified toggle
     const v = document.getElementById('verifiedOnly');
     v.checked = VERIFIED_ONLY;
 
@@ -1060,25 +1037,18 @@ map.on('load', () => {
   function render(){
     const list = ALL.filter(passesFilters);
 
-    // Count + breakdown
     const verifiedCount = list.filter(c => c.verified).length;
     const standardCount = list.length - verifiedCount;
 
     countEl.querySelector('span').textContent = `Showing ${list.length} clinics`;
     breakdownEl.textContent = `${verifiedCount} Prime Verified • ${standardCount} Standard`;
 
-    // Update marker visibility instead of recreating
     updateMarkerVisibility();
-
-    // Sidebar list
     renderList(list);
-
-    // Pills
     setPills();
   }
 
   function wireUI(){
-    // TYPE chips
     document.querySelectorAll('#typeFilter .chip').forEach(chip => {
       chip.addEventListener('click', () => {
         TYPE = chip.dataset.type || 'all';
@@ -1087,7 +1057,6 @@ map.on('load', () => {
       });
     });
 
-    // SERVICE chips (multi-select)
     document.querySelectorAll('#serviceFilter .chip').forEach(chip => {
       chip.addEventListener('click', () => {
         const svc = (chip.dataset.service || '').toLowerCase();
@@ -1101,7 +1070,6 @@ map.on('load', () => {
       });
     });
 
-    // Verified only toggle
     const v = document.getElementById('verifiedOnly');
     v.addEventListener('change', () => {
       VERIFIED_ONLY = !!v.checked;
@@ -1109,7 +1077,6 @@ map.on('load', () => {
       render();
     });
 
-    // Search with debounce
     let searchTimeout;
     qEl.addEventListener('input', () => {
       clearTimeout(searchTimeout);
@@ -1120,7 +1087,6 @@ map.on('load', () => {
       }, 300);
     });
 
-    // Clear
     document.getElementById('clearBtn').addEventListener('click', () => {
       TYPE = 'all';
       SERVICES = new Set();
@@ -1131,7 +1097,6 @@ map.on('load', () => {
       render();
     });
 
-    // Close panel when clicking map
     map.on('click',()=>panel.classList.remove('open'));
   }
 
@@ -1142,10 +1107,8 @@ map.on('load', () => {
       const res = await fetch(ENDPOINT, { cache: 'no-store' });
       const rows = await res.json();
       ALL = (Array.isArray(rows) ? rows : []).map(toClinic);
-      
-      // Create markers once
+
       createAllMarkers();
-      
       wireUI();
       syncUIFromState();
       render();
