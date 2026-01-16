@@ -17,6 +17,9 @@
       --text:#e8ecf3;
       --standard:#3a3f46;
       --verified:#72BDDC;
+      --card:#121824;
+      --card2:#0f151f;
+      --line:rgba(255,255,255,.08);
     }
 
     *{box-sizing:border-box}
@@ -31,7 +34,7 @@
     .topbar{
       height:84px;
       background:#000;
-      border-bottom:1px solid rgba(255,255,255,.08);
+      border-bottom:1px solid var(--line);
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -39,9 +42,7 @@
       position:relative;
       z-index:10;
     }
-    .topbar img{
-      height:52px;
-    }
+    .topbar img{ height:52px; }
     .topbar a{
       color:#dbe3f1;
       text-decoration:none;
@@ -56,32 +57,100 @@
       display:grid;
       grid-template-columns:380px 1fr;
       height:calc(100vh - 84px);
+      position:relative;
     }
 
     /* SIDEBAR */
     .sidebar{
       background:linear-gradient(180deg,#0d1118,#0b0e13);
-      padding:28px;
+      padding:22px 18px 18px;
       overflow:auto;
-      border-right:1px solid rgba(255,255,255,.08);
+      border-right:1px solid var(--line);
       position:relative;
     }
     .sidebar h1{
-      font-size:24px;
-      line-height:1.3;
-      margin:0 0 14px;
+      font-size:22px;
+      line-height:1.25;
+      margin:0 0 10px;
+      letter-spacing:.2px;
     }
     .sidebar p{
-      color:var(--muted);
-      font-size:15px;
-      margin:0 0 22px;
+      color:#c7d2e4; /* brighter than muted */
+      font-size:14px;
+      margin:0 0 14px;
+      line-height:1.45;
     }
+
+    /* Search */
+    .search{
+      position:sticky;
+      top:0;
+      z-index:3;
+      padding:10px 10px 12px;
+      margin:0 -10px 10px;
+      background:linear-gradient(180deg,#0d1118 60%, rgba(13,17,24,0));
+      backdrop-filter:saturate(1.1) blur(6px);
+    }
+    .search input{
+      width:100%;
+      padding:12px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.10);
+      background:#0f1520;
+      color:var(--text);
+      font-size:14px;
+      outline:none;
+    }
+    .search input::placeholder{color:#93a0b6}
+    .search-row{
+      display:flex;
+      gap:10px;
+      margin-top:10px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .clearBtn{
+      border:1px solid rgba(255,255,255,.10);
+      background:#0f1520;
+      color:#cfe0ff;
+      padding:10px 12px;
+      border-radius:12px;
+      font-weight:600;
+      cursor:pointer;
+      font-size:13px;
+      white-space:nowrap;
+    }
+    .clearBtn:hover{filter:brightness(1.06)}
+
+    /* Active filter pills */
+    .pills{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px;
+    }
+    .pill{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:8px 10px;
+      border-radius:999px;
+      background:#0f1520;
+      border:1px solid rgba(255,255,255,.10);
+      color:#dbe3f1;
+      font-size:12px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .pill b{font-weight:700}
+    .pill .x{opacity:.8}
+    .pill:hover{filter:brightness(1.06)}
 
     .filter h3{
       font-size:11px;
       letter-spacing:.14em;
-      color:#8f98a7;
-      margin:26px 0 10px;
+      color:#aeb7c6;
+      margin:18px 0 10px;
     }
 
     .chips{
@@ -90,33 +159,128 @@
       gap:10px;
     }
     .chip{
-      padding:7px 14px;
+      padding:8px 14px;
       border-radius:999px;
       background:#151b26;
       font-size:14px;
       cursor:pointer;
-      border:1px solid rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
       user-select:none;
     }
     .chip.active{
-      border-color:rgba(114,189,220,.75);
+      border-color:rgba(114,189,220,.85);
       box-shadow:0 0 0 4px rgba(114,189,220,.16);
     }
 
+    /* Toggle */
     .toggle{
       display:flex;
       align-items:center;
       justify-content:space-between;
       background:#151b26;
       padding:12px 14px;
-      border-radius:10px;
-      font-size:15px;
+      border-radius:12px;
+      font-size:14px;
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .toggle span{color:#dbe3f1}
+    .toggle input{transform:scale(1.05)}
+
+    /* Count + breakdown */
+    .count{
+      margin-top:14px;
+      font-size:14px;
+      color:#dbe3f1;
+      display:flex;
+      gap:8px;
+      align-items:baseline;
+      justify-content:space-between;
+    }
+    .count small{
+      color:#b9c6dd;
+      font-size:12px;
+      white-space:nowrap;
     }
 
-    .count{
-      margin-top:16px;
+    /* Clinic list */
+    .list{
+      margin-top:14px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      padding-bottom:96px; /* leave room above footer */
+    }
+    .card{
+      background:linear-gradient(180deg,var(--card),var(--card2));
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:14px;
+      padding:12px;
+      cursor:pointer;
+      box-shadow:0 10px 20px rgba(0,0,0,.20);
+    }
+    .card:hover{filter:brightness(1.06)}
+    .cardTop{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .cardLogo{
+      width:44px;height:44px;
+      border-radius:12px;
+      object-fit:contain;
+      background:#0b0e13;
+      border:1px solid rgba(255,255,255,.10);
+      flex:0 0 auto;
+    }
+    .cardTitle{
+      display:flex;
+      flex-direction:column;
+      min-width:0;
+      flex:1;
+    }
+    .cardTitle strong{
       font-size:14px;
-      color:#9fb0c7;
+      line-height:1.2;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .cardTitle span{
+      font-size:12px;
+      color:#c7d2e4; /* not muted */
+      margin-top:3px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .tag{
+      font-size:11px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:#0f1520;
+      color:#dbe3f1;
+      flex:0 0 auto;
+    }
+    .tag.verified{
+      border-color:rgba(114,189,220,.6);
+      box-shadow:0 0 0 4px rgba(114,189,220,.12);
+      color:var(--verified);
+      font-weight:700;
+    }
+    .cardServices{
+      margin-top:10px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .svcPill{
+      font-size:11px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:#0f1520;
+      border:1px solid rgba(255,255,255,.10);
+      color:#dbe3f1;
     }
 
     /* MAP */
@@ -137,76 +301,139 @@
         0 0 0 7px rgba(114,189,220,.28);
     }
 
-    /* SIDE PANEL */
+    /* SIDE PANEL (DETAIL) */
     .panel{
       position:absolute;
       top:84px;
       right:0;
-      width:380px;
+      width:420px;
+      max-width:92vw;
       height:calc(100vh - 84px);
-      background:var(--panel);
-      border-left:1px solid rgba(255,255,255,.1);
-      padding:26px;
+      background:linear-gradient(180deg,#101622,#0c111a);
+      border-left:1px solid rgba(255,255,255,.10);
+      padding:22px 22px 0;
       transform:translateX(100%);
       transition:.25s ease;
       z-index:9;
       overflow:auto;
     }
     .panel.open{transform:none}
-    .panel h2{margin:0 0 6px}
+
+    .panelHeader{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      margin-bottom:14px;
+    }
+    .panelLogo{
+      width:76px;height:76px;
+      border-radius:16px;
+      object-fit:contain;
+      background:#0b0e13;
+      border:1px solid rgba(255,255,255,.10);
+      flex:0 0 auto;
+    }
+    .panelTitle{
+      min-width:0;
+      flex:1;
+    }
+    .panelTitle h2{
+      margin:0;
+      font-size:24px;
+      letter-spacing:.2px;
+      line-height:1.2;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
     .badge{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      margin-top:8px;
       color:var(--verified);
-      font-size:15px;
-      font-weight:600;
-      margin:6px 0 14px;
+      font-size:14px;
+      font-weight:800;
       text-shadow:0 0 18px rgba(114,189,220,.45);
     }
-    .panel p{
-      color:var(--muted);
-      font-size:15px;
-      margin:6px 0;
+
+    .panelMeta{
+      margin-top:14px;
+      border-top:1px solid rgba(255,255,255,.08);
+      border-bottom:1px solid rgba(255,255,255,.08);
+      padding:12px 0;
     }
-    .panel a{
+    .metaRow{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      margin:8px 0;
+      color:#dbe3f1; /* NOT muted */
+      font-size:14px;
+      line-height:1.4;
+    }
+    .metaIcon{
+      width:22px;
+      opacity:.95;
+      flex:0 0 auto;
+      margin-top:1px;
+      filter:drop-shadow(0 0 10px rgba(114,189,220,.10));
+    }
+
+    .desc{
+      margin:14px 0 14px;
+      color:#dbe3f1; /* brighter */
+      font-size:15px;
+      line-height:1.55;
+
+      /* Clamp only after ~5 lines */
+      display:-webkit-box;
+      -webkit-line-clamp:5;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+    }
+
+    .panelCta{
+      position:sticky;
+      bottom:0;
+      padding:16px 0 18px;
+      background:linear-gradient(180deg, rgba(12,17,26,0), #0c111a 35%);
+      backdrop-filter: blur(6px);
+    }
+    .panelCta a{
       display:block;
-      margin-top:22px;
-      padding:14px;
+      width:100%;
+      padding:16px;
       text-align:center;
       background:var(--verified);
       color:#001018;
-      font-weight:700;
+      font-weight:900;
       text-decoration:none;
-      border-radius:10px;
+      border-radius:14px;
+      box-shadow:0 10px 24px rgba(114,189,220,.20);
     }
-    .panel a:hover{filter:brightness(1.05)}
-    .panel .logo{
-      width:84px;height:84px;
-      object-fit:contain;
-      border-radius:10px;
-      background:#0b0e13;
-      border:1px solid rgba(255,255,255,.08);
-      margin:10px 0 14px;
-      display:block;
-    }
+    .panelCta a:hover{filter:brightness(1.05)}
 
-    /* FOOTER */
+    /* FOOTER (sidebar) */
     .dir-footer{
-      position:absolute;
+      position:sticky;
       bottom:0;
       left:0;
       width:100%;
-      padding:16px 24px;
-      font-size:13px;
-      color:#9aa4b2;
+      padding:14px 10px;
+      font-size:12px;
+      color:#b9c6dd;
       border-top:1px solid rgba(255,255,255,.08);
       background:#0b0e13;
       display:flex;
       justify-content:space-between;
       align-items:center;
+      margin-top:16px;
     }
     .dir-footer a{
-      color:#9fb0c7;
+      color:#cfe0ff;
       text-decoration:none;
-      margin-left:18px;
+      margin-left:14px;
     }
     .dir-footer a:hover{color:#fff}
 
@@ -214,7 +441,8 @@
     @media(max-width:900px){
       .wrap{grid-template-columns:1fr}
       .sidebar{display:none}
-      .panel{width:100%}
+      .panel{width:100%; padding:18px 18px 0}
+      .panelTitle h2{font-size:22px}
     }
   </style>
 </head>
@@ -235,8 +463,17 @@
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <h1>Highly Recommended Regenerative & Functional Clinics Across the USA</h1>
-    <p>Clinics listed here have been reviewed and approved through the Prime Regenerative screening process.</p>
+    <div class="search">
+      <h1>Highly Recommended Regenerative & Functional Clinics Across the USA</h1>
+      <p>Clinics listed here have been reviewed and approved through the Prime Regenerative screening process.</p>
+
+      <input id="q" type="text" placeholder="Search clinic, city, or state…" />
+
+      <div class="search-row">
+        <div class="pills" id="pills"></div>
+        <button class="clearBtn" id="clearBtn" type="button">Clear</button>
+      </div>
+    </div>
 
     <div class="filter" id="typeFilter">
       <h3>TYPE</h3>
@@ -266,12 +503,18 @@
     <div class="filter">
       <h3>VERIFIED</h3>
       <div class="toggle">
-        <span>Verified only</span>
+        <span>Prime Verified only</span>
         <input type="checkbox" id="verifiedOnly">
       </div>
     </div>
 
-    <div class="count" id="count">Loading clinics…</div>
+    <div class="count" id="count">
+      <span>Loading clinics…</span>
+      <small id="breakdown"></small>
+    </div>
+
+    <!-- Clinic list -->
+    <div class="list" id="list"></div>
 
     <!-- FOOTER -->
     <div class="dir-footer">
@@ -309,18 +552,23 @@
 
   const panel = document.getElementById('panel');
   const countEl = document.getElementById('count');
+  const breakdownEl = document.getElementById('breakdown');
+  const listEl = document.getElementById('list');
+  const pillsEl = document.getElementById('pills');
+  const qEl = document.getElementById('q');
 
   // Filter state
   let TYPE = 'all';          // all | regenerative | functional
-  let SERVICE = null;        // string or null
+  let SERVICES = new Set();  // multi-select services
   let VERIFIED_ONLY = false; // boolean
+  let Q = '';                // search query
 
   // Data
   let ALL = [];              // normalized clinic objects
   let markers = [];          // Mapbox markers
+  const markerById = new Map();
 
   function normalizeType(row){
-    // Prefer strict enum if you store it as "functional"/"regenerative"
     const raw = String(row.type || '').toLowerCase().trim();
     if (raw === 'functional' || raw === 'regenerative') return raw;
     if (raw.includes('functional')) return 'functional';
@@ -329,91 +577,210 @@
   }
 
   function isVerified(row){
-    // Verified rule: tier === "verified"
     return String(row.tier || '').toLowerCase().trim() === 'verified';
   }
 
   function normalizeServices(row){
-    // Sheet stores "A, B, C" string
     return String(row.services || '')
       .split(',')
       .map(s => s.trim())
       .filter(Boolean);
   }
 
+  function safeSite(url){
+    const u = String(url || '').trim();
+    if (!u) return '#';
+    if (u.startsWith('http://') || u.startsWith('https://')) return u;
+    return 'https://' + u;
+  }
+
   function toClinic(row){
+    const services = normalizeServices(row);
+    const cityState = [row.city, row.state].filter(Boolean).join(', ');
     return {
-      id: row.id || '',
+      id: row.id || row.slug || row.clinic_name || Math.random().toString(36).slice(2),
       name: row.clinic_name || row.name || 'Unnamed Clinic',
       slug: row.slug || '',
       type: normalizeType(row),
       verified: isVerified(row),
       address: row.address || '',
-      city: [row.city, row.state].filter(Boolean).join(', '),
+      city: cityState,
       lat: Number(row.lat),
       lng: Number(row.lng),
       phone: String(row.phone || ''),
-      website: row.website || '#',
-      internal_email: row.internal_email || '',
-      public_email: row.public_email || '',
-      services: normalizeServices(row),
-      services_raw: String(row.services || ''),
+      website: safeSite(row.website),
+      services,
       description: row.description || '',
-      accepting_new_patients: String(row.accepting_new_patients || ''),
-      telehealth: String(row.telehealth || ''),
-      financing_available: String(row.financing_available || ''),
-      tier: String(row.tier || ''),
-      verified_until: String(row.verified_until || ''),
-      logo_url: row.logo_url || '',
-      photos: row.photos || '',
-      source: row.source || '',
-      notes: row.notes || '',
-      created_at: row.created_at || '',
-      updated_at: row.updated_at || ''
+      logo_url: row.logo_url || ''
     };
+  }
+
+  function matchesSearch(c){
+    if (!Q) return true;
+    const hay = `${c.name} ${c.city} ${c.address} ${c.services.join(' ')}`.toLowerCase();
+    return hay.includes(Q);
+  }
+
+  function hasServices(c){
+    if (SERVICES.size === 0) return true;
+    const set = new Set(c.services.map(s => s.toLowerCase()));
+    for (const want of SERVICES){
+      if (!set.has(want)) return false;
+    }
+    return true;
   }
 
   function passesFilters(c){
     if (!Number.isFinite(c.lat) || !Number.isFinite(c.lng)) return false;
-
     if (TYPE !== 'all' && c.type !== TYPE) return false;
-
     if (VERIFIED_ONLY && !c.verified) return false;
-
-    if (SERVICE){
-      const svc = SERVICE.toLowerCase();
-      const has = c.services.some(s => s.toLowerCase() === svc);
-      if (!has) return false;
-    }
-
+    if (!hasServices(c)) return false;
+    if (!matchesSearch(c)) return false;
     return true;
   }
 
   function clearMarkers(){
     markers.forEach(m => m.remove());
     markers = [];
+    markerById.clear();
+  }
+
+  function flyToClinic(c){
+    map.flyTo({ center:[c.lng, c.lat], zoom:12.5, speed:1.4, curve:1.3 });
   }
 
   function openPanel(c){
-    const logoHtml = c.logo_url
-      ? `<img class="logo" src="${c.logo_url}" alt="${c.name} logo">`
-      : '';
+    const logo = c.logo_url
+      ? `<img class="panelLogo" src="${c.logo_url}" alt="${c.name} logo">`
+      : `<div class="panelLogo" aria-hidden="true"></div>`;
+
+    const typeLabel = c.type === 'functional' ? 'Functional Medicine' : 'Regenerative Medicine';
 
     panel.innerHTML = `
-      <h2>${c.name}</h2>
-      ${c.verified ? '<div class="badge">✔ Prime Verified Clinic</div>' : ''}
-      ${logoHtml}
-      <p>${c.city || c.address}</p>
-      ${c.services.length ? `<p>${c.services.join(', ')}</p>` : ''}
-      ${c.description ? `<p>${c.description}</p>` : ''}
-      <a href="${c.website}" target="_blank" rel="noopener">Visit Clinic Website</a>
+      <div class="panelHeader">
+        ${logo}
+        <div class="panelTitle">
+          <h2>${c.name}</h2>
+          ${c.verified ? `<div class="badge">✓ Prime Verified Clinic</div>` : `<div class="badge" style="opacity:.45;color:#dbe3f1;text-shadow:none;font-weight:700">Prime Directory Listing</div>`}
+        </div>
+      </div>
+
+      <div class="panelMeta">
+        <div class="metaRow"><span class="metaIcon">🏥</span><div>${typeLabel}</div></div>
+        <div class="metaRow"><span class="metaIcon">📍</span><div>${c.city || c.address}</div></div>
+        ${c.services.length ? `<div class="metaRow"><span class="metaIcon">🧬</span><div>${c.services.join(', ')}</div></div>` : ''}
+      </div>
+
+      ${c.description ? `<div class="desc">${c.description}</div>` : ''}
+
+      <div class="panelCta">
+        <a href="${c.website}" target="_blank" rel="noopener">Visit Clinic Website</a>
+      </div>
     `;
     panel.classList.add('open');
+  }
+
+  function setPills(){
+    const pills = [];
+
+    if (TYPE !== 'all') pills.push({ key:'type', label:`Type: ${TYPE}` });
+
+    for (const s of SERVICES){
+      pills.push({ key:'svc', value:s, label:s });
+    }
+
+    if (VERIFIED_ONLY) pills.push({ key:'verified', label:'Prime Verified only' });
+
+    if (Q) pills.push({ key:'q', label:`Search: "${Q}"` });
+
+    pillsEl.innerHTML = pills.map(p => `
+      <div class="pill" data-key="${p.key}" data-value="${p.value || ''}">
+        <b>${p.label}</b><span class="x">✕</span>
+      </div>
+    `).join('');
+
+    pillsEl.querySelectorAll('.pill').forEach(el => {
+      el.addEventListener('click', () => {
+        const key = el.dataset.key;
+        const val = el.dataset.value;
+
+        if (key === 'type') TYPE = 'all';
+        if (key === 'svc') SERVICES.delete(val);
+        if (key === 'verified') VERIFIED_ONLY = false;
+        if (key === 'q'){ Q = ''; qEl.value = ''; }
+
+        syncUIFromState();
+        render();
+      });
+    });
+  }
+
+  function syncUIFromState(){
+    // Type chips
+    document.querySelectorAll('#typeFilter .chip').forEach(chip => {
+      chip.classList.toggle('active', (chip.dataset.type || 'all') === TYPE);
+    });
+
+    // Service chips
+    document.querySelectorAll('#serviceFilter .chip').forEach(chip => {
+      const svc = (chip.dataset.service || '').toLowerCase();
+      chip.classList.toggle('active', SERVICES.has(svc));
+    });
+
+    // Verified toggle
+    const v = document.getElementById('verifiedOnly');
+    v.checked = VERIFIED_ONLY;
+
+    setPills();
+  }
+
+  function renderList(list){
+    listEl.innerHTML = list.map(c => {
+      const tagClass = c.verified ? 'tag verified' : 'tag';
+      const tagText  = c.verified ? 'Prime Verified' : 'Standard';
+      const logo = c.logo_url
+        ? `<img class="cardLogo" src="${c.logo_url}" alt="${c.name} logo">`
+        : `<div class="cardLogo" aria-hidden="true"></div>`;
+
+      const topSvcs = c.services.slice(0,3).map(s => `<span class="svcPill">${s}</span>`).join('');
+
+      return `
+        <div class="card" data-id="${c.id}">
+          <div class="cardTop">
+            ${logo}
+            <div class="cardTitle">
+              <strong>${c.name}</strong>
+              <span>${c.city || c.address}</span>
+            </div>
+            <span class="${tagClass}">${tagText}</span>
+          </div>
+          ${topSvcs ? `<div class="cardServices">${topSvcs}</div>` : ''}
+        </div>
+      `;
+    }).join('');
+
+    listEl.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('click', () => {
+        const id = card.dataset.id;
+        const c = ALL.find(x => x.id === id);
+        if (!c) return;
+        flyToClinic(c);
+        openPanel(c);
+      });
+    });
   }
 
   function render(){
     const list = ALL.filter(passesFilters);
 
+    // Count + breakdown
+    const verifiedCount = list.filter(c => c.verified).length;
+    const standardCount = list.length - verifiedCount;
+
+    countEl.querySelector('span').textContent = `Showing ${list.length} clinics`;
+    breakdownEl.textContent = `${verifiedCount} Prime Verified • ${standardCount} Standard`;
+
+    // Markers
     clearMarkers();
 
     list.forEach(c => {
@@ -430,37 +797,36 @@
         .addTo(map);
 
       markers.push(marker);
+      markerById.set(c.id, marker);
     });
 
-    if (countEl) countEl.textContent = `${list.length} clinics shown`;
+    // Sidebar list
+    renderList(list);
+
+    // Pills
+    setPills();
   }
 
   function wireUI(){
     // TYPE chips
     document.querySelectorAll('#typeFilter .chip').forEach(chip => {
       chip.addEventListener('click', () => {
-        document.querySelectorAll('#typeFilter .chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
         TYPE = chip.dataset.type || 'all';
+        syncUIFromState();
         render();
       });
     });
 
-    // SERVICE chips (single-select; click again to clear)
+    // SERVICE chips (multi-select)
     document.querySelectorAll('#serviceFilter .chip').forEach(chip => {
       chip.addEventListener('click', () => {
-        const svc = chip.dataset.service || null;
-        const isActive = chip.classList.contains('active');
+        const svc = (chip.dataset.service || '').toLowerCase();
+        if (!svc) return;
 
-        document.querySelectorAll('#serviceFilter .chip').forEach(c => c.classList.remove('active'));
+        if (SERVICES.has(svc)) SERVICES.delete(svc);
+        else SERVICES.add(svc);
 
-        if (isActive){
-          SERVICE = null;
-        } else {
-          chip.classList.add('active');
-          SERVICE = svc;
-        }
-
+        syncUIFromState();
         render();
       });
     });
@@ -469,30 +835,53 @@
     const v = document.getElementById('verifiedOnly');
     v.addEventListener('change', () => {
       VERIFIED_ONLY = !!v.checked;
+      syncUIFromState();
+      render();
+    });
+
+    // Search
+    qEl.addEventListener('input', () => {
+      Q = qEl.value.trim().toLowerCase();
+      setPills();
+      render();
+    });
+
+    // Clear
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      TYPE = 'all';
+      SERVICES = new Set();
+      VERIFIED_ONLY = false;
+      Q = '';
+      qEl.value = '';
+      syncUIFromState();
       render();
     });
 
     // Close panel when clicking map
-    map.on('click', () => panel.classList.remove('open'));
+    map.on('click',()=>panel.classList.remove('open'));
   }
 
   async function loadClinics(){
-    countEl.textContent = 'Loading clinics…';
+    countEl.querySelector('span').textContent = 'Loading clinics…';
+    breakdownEl.textContent = '';
     try{
       const res = await fetch(ENDPOINT, { cache: 'no-store' });
       const rows = await res.json();
       ALL = (Array.isArray(rows) ? rows : []).map(toClinic);
+      wireUI();
+      syncUIFromState();
       render();
     }catch(err){
       console.error('Failed to load clinics', err);
-      countEl.textContent = 'Failed to load clinics';
+      countEl.querySelector('span').textContent = 'Failed to load clinics';
+      breakdownEl.textContent = '';
     }
   }
 
-  wireUI();
   loadClinics();
 </script>
 
 </body>
 </html>
+
 
