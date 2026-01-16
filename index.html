@@ -96,6 +96,11 @@
       font-size:14px;
       cursor:pointer;
       border:1px solid rgba(255,255,255,.08);
+      user-select:none;
+    }
+    .chip.active{
+      border-color:rgba(114,189,220,.75);
+      box-shadow:0 0 0 4px rgba(114,189,220,.16);
     }
 
     .toggle{
@@ -145,6 +150,7 @@
       transform:translateX(100%);
       transition:.25s ease;
       z-index:9;
+      overflow:auto;
     }
     .panel.open{transform:none}
     .panel h2{margin:0 0 6px}
@@ -153,6 +159,7 @@
       font-size:15px;
       font-weight:600;
       margin:6px 0 14px;
+      text-shadow:0 0 18px rgba(114,189,220,.45);
     }
     .panel p{
       color:var(--muted);
@@ -169,6 +176,16 @@
       font-weight:700;
       text-decoration:none;
       border-radius:10px;
+    }
+    .panel a:hover{filter:brightness(1.05)}
+    .panel .logo{
+      width:84px;height:84px;
+      object-fit:contain;
+      border-radius:10px;
+      background:#0b0e13;
+      border:1px solid rgba(255,255,255,.08);
+      margin:10px 0 14px;
+      display:block;
     }
 
     /* FOOTER */
@@ -197,6 +214,7 @@
     @media(max-width:900px){
       .wrap{grid-template-columns:1fr}
       .sidebar{display:none}
+      .panel{width:100%}
     }
   </style>
 </head>
@@ -207,9 +225,9 @@
 <div class="topbar">
   <img src="https://storage.googleapis.com/msgsndr/HjPB77l6JDSqhEzt2YNT/media/66c4a87c66f58d551de0ed1f.png" alt="Prime Regenerative">
   <div>
-    <a href="https://www.primeregenerative.com/" target="_blank">Home</a>
-    <a href="https://primeregenerative.com/verified-directory" target="_blank">About Prime Verified</a>
-    <a href="https://primeregenerative.com/verified-directory" target="_blank">Clinic Owner?</a>
+    <a href="https://www.primeregenerative.com/" target="_blank" rel="noopener">Home</a>
+    <a href="https://primeregenerative.com/verified-directory" target="_blank" rel="noopener">About Prime Verified</a>
+    <a href="https://primeregenerative.com/verified-directory" target="_blank" rel="noopener">Clinic Owner?</a>
   </div>
 </div>
 
@@ -220,28 +238,28 @@
     <h1>Highly Recommended Regenerative & Functional Clinics Across the USA</h1>
     <p>Clinics listed here have been reviewed and approved through the Prime Regenerative screening process.</p>
 
-    <div class="filter">
+    <div class="filter" id="typeFilter">
       <h3>TYPE</h3>
       <div class="chips">
-        <div class="chip">All</div>
-        <div class="chip">Regenerative</div>
-        <div class="chip">Functional</div>
+        <div class="chip active" data-type="all">All</div>
+        <div class="chip" data-type="regenerative">Regenerative</div>
+        <div class="chip" data-type="functional">Functional</div>
       </div>
     </div>
 
-    <div class="filter">
+    <div class="filter" id="serviceFilter">
       <h3>SERVICES</h3>
       <div class="chips">
-        <div class="chip">PRP</div>
-        <div class="chip">Exosomes</div>
-        <div class="chip">Wharton's Jelly</div>
-        <div class="chip">Shockwave</div>
-        <div class="chip">Peptides</div>
-        <div class="chip">Hormone Therapy</div>
-        <div class="chip">IV Therapy</div>
-        <div class="chip">Joint Pain</div>
-        <div class="chip">Hair Loss</div>
-        <div class="chip">Weight Loss</div>
+        <div class="chip" data-service="PRP">PRP</div>
+        <div class="chip" data-service="Exosomes">Exosomes</div>
+        <div class="chip" data-service="Wharton's Jelly">Wharton's Jelly</div>
+        <div class="chip" data-service="Shockwave">Shockwave</div>
+        <div class="chip" data-service="Peptides">Peptides</div>
+        <div class="chip" data-service="Hormone Therapy">Hormone Therapy</div>
+        <div class="chip" data-service="IV Therapy">IV Therapy</div>
+        <div class="chip" data-service="Joint Pain">Joint Pain</div>
+        <div class="chip" data-service="Hair Loss">Hair Loss</div>
+        <div class="chip" data-service="Weight Loss">Weight Loss</div>
       </div>
     </div>
 
@@ -249,19 +267,19 @@
       <h3>VERIFIED</h3>
       <div class="toggle">
         <span>Verified only</span>
-        <input type="checkbox">
+        <input type="checkbox" id="verifiedOnly">
       </div>
     </div>
 
-    <div class="count">3 clinics shown</div>
+    <div class="count" id="count">Loading clinics…</div>
 
     <!-- FOOTER -->
     <div class="dir-footer">
       <div>© 2025 Prime Regenerative</div>
       <div>
-        <a href="https://primeregenerative.com/privacy" target="_blank">Privacy</a>
-        <a href="https://primeregenerative.com/terms-of-service-7568" target="_blank">Terms</a>
-        <a href="https://primeregenerative.com/verified-directory" target="_blank">Clinic Owner?</a>
+        <a href="https://primeregenerative.com/privacy" target="_blank" rel="noopener">Privacy</a>
+        <a href="https://primeregenerative.com/terms-of-service-7568" target="_blank" rel="noopener">Terms</a>
+        <a href="https://primeregenerative.com/verified-directory" target="_blank" rel="noopener">Clinic Owner?</a>
       </div>
     </div>
   </aside>
@@ -274,9 +292,12 @@
 <div class="panel" id="panel"></div>
 
 <script>
-  /* MAPBOX TOKEN — CORRECT */
+  /* MAPBOX TOKEN */
   mapboxgl.accessToken =
     'pk.eyJ1IjoicHJpbWVyZWdlbmVyYXRpdmUiLCJhIjoiY21rZTk1dHB4MDRiYjNlcHBheTJubGh0ayJ9.R9IN8o-u1xnjry7a8BkMsw';
+
+  /* APPS SCRIPT ENDPOINT (APPROVED-ONLY JSON) */
+  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbxs9SA3C7rRMgoxWNTFqZ5Ouyy603WpIgczlwvANtlvmHWfCI5QSwXb0BJvax5MqCGF/exec';
 
   const map = new mapboxgl.Map({
     container:'map',
@@ -284,63 +305,194 @@
     center:[-98,39],
     zoom:3.4
   });
-
   map.addControl(new mapboxgl.NavigationControl());
 
-  const clinics = [
-    {
-      name:'Prime Ortho Center',
-      city:'Los Angeles, CA',
-      lat:34.05,lng:-118.25,
-      services:'PRP, Exosomes, Joint Pain',
-      verified:true,
-      site:'https://primeregenerative.com'
-    },
-    {
-      name:'Longevity Health',
-      city:'Miami, FL',
-      lat:25.76,lng:-80.19,
-      services:'IV Therapy, Hormone Therapy',
-      verified:true,
-      site:'https://primeregenerative.com'
-    },
-    {
-      name:'Restore Wellness',
-      city:'Austin, TX',
-      lat:30.26,lng:-97.74,
-      services:'Weight Loss, Peptides',
-      verified:false,
-      site:'https://primeregenerative.com'
+  const panel = document.getElementById('panel');
+  const countEl = document.getElementById('count');
+
+  // Filter state
+  let TYPE = 'all';          // all | regenerative | functional
+  let SERVICE = null;        // string or null
+  let VERIFIED_ONLY = false; // boolean
+
+  // Data
+  let ALL = [];              // normalized clinic objects
+  let markers = [];          // Mapbox markers
+
+  function normalizeType(row){
+    // Prefer strict enum if you store it as "functional"/"regenerative"
+    const raw = String(row.type || '').toLowerCase().trim();
+    if (raw === 'functional' || raw === 'regenerative') return raw;
+    if (raw.includes('functional')) return 'functional';
+    if (raw.includes('regenerative')) return 'regenerative';
+    return raw || 'regenerative';
+  }
+
+  function isVerified(row){
+    // Verified rule: tier === "verified"
+    return String(row.tier || '').toLowerCase().trim() === 'verified';
+  }
+
+  function normalizeServices(row){
+    // Sheet stores "A, B, C" string
+    return String(row.services || '')
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+  }
+
+  function toClinic(row){
+    return {
+      id: row.id || '',
+      name: row.clinic_name || row.name || 'Unnamed Clinic',
+      slug: row.slug || '',
+      type: normalizeType(row),
+      verified: isVerified(row),
+      address: row.address || '',
+      city: [row.city, row.state].filter(Boolean).join(', '),
+      lat: Number(row.lat),
+      lng: Number(row.lng),
+      phone: String(row.phone || ''),
+      website: row.website || '#',
+      internal_email: row.internal_email || '',
+      public_email: row.public_email || '',
+      services: normalizeServices(row),
+      services_raw: String(row.services || ''),
+      description: row.description || '',
+      accepting_new_patients: String(row.accepting_new_patients || ''),
+      telehealth: String(row.telehealth || ''),
+      financing_available: String(row.financing_available || ''),
+      tier: String(row.tier || ''),
+      verified_until: String(row.verified_until || ''),
+      logo_url: row.logo_url || '',
+      photos: row.photos || '',
+      source: row.source || '',
+      notes: row.notes || '',
+      created_at: row.created_at || '',
+      updated_at: row.updated_at || ''
+    };
+  }
+
+  function passesFilters(c){
+    if (!Number.isFinite(c.lat) || !Number.isFinite(c.lng)) return false;
+
+    if (TYPE !== 'all' && c.type !== TYPE) return false;
+
+    if (VERIFIED_ONLY && !c.verified) return false;
+
+    if (SERVICE){
+      const svc = SERVICE.toLowerCase();
+      const has = c.services.some(s => s.toLowerCase() === svc);
+      if (!has) return false;
     }
-  ];
 
-  const panel=document.getElementById('panel');
+    return true;
+  }
 
-clinics.forEach(c=>{
-  const el = document.createElement('div');
-  el.className = 'marker' + (c.verified ? ' verified' : '');
+  function clearMarkers(){
+    markers.forEach(m => m.remove());
+    markers = [];
+  }
 
-  el.onclick = (e) => {
-    e.stopPropagation(); // IMPORTANT
+  function openPanel(c){
+    const logoHtml = c.logo_url
+      ? `<img class="logo" src="${c.logo_url}" alt="${c.name} logo">`
+      : '';
 
     panel.innerHTML = `
       <h2>${c.name}</h2>
       ${c.verified ? '<div class="badge">✔ Prime Verified Clinic</div>' : ''}
-      <p>${c.city}</p>
-      <p>${c.services}</p>
-      <a href="${c.site}" target="_blank">Visit Clinic Website</a>
+      ${logoHtml}
+      <p>${c.city || c.address}</p>
+      ${c.services.length ? `<p>${c.services.join(', ')}</p>` : ''}
+      ${c.description ? `<p>${c.description}</p>` : ''}
+      <a href="${c.website}" target="_blank" rel="noopener">Visit Clinic Website</a>
     `;
     panel.classList.add('open');
-  };
+  }
 
-  new mapboxgl.Marker(el)
-    .setLngLat([c.lng, c.lat])
-    .addTo(map);
-});
+  function render(){
+    const list = ALL.filter(passesFilters);
 
+    clearMarkers();
 
-  map.on('click',()=>panel.classList.remove('open'));
+    list.forEach(c => {
+      const el = document.createElement('div');
+      el.className = 'marker' + (c.verified ? ' verified' : '');
+
+      el.onclick = (e) => {
+        e.stopPropagation();
+        openPanel(c);
+      };
+
+      const marker = new mapboxgl.Marker(el)
+        .setLngLat([c.lng, c.lat])
+        .addTo(map);
+
+      markers.push(marker);
+    });
+
+    if (countEl) countEl.textContent = `${list.length} clinics shown`;
+  }
+
+  function wireUI(){
+    // TYPE chips
+    document.querySelectorAll('#typeFilter .chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('#typeFilter .chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        TYPE = chip.dataset.type || 'all';
+        render();
+      });
+    });
+
+    // SERVICE chips (single-select; click again to clear)
+    document.querySelectorAll('#serviceFilter .chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const svc = chip.dataset.service || null;
+        const isActive = chip.classList.contains('active');
+
+        document.querySelectorAll('#serviceFilter .chip').forEach(c => c.classList.remove('active'));
+
+        if (isActive){
+          SERVICE = null;
+        } else {
+          chip.classList.add('active');
+          SERVICE = svc;
+        }
+
+        render();
+      });
+    });
+
+    // Verified only toggle
+    const v = document.getElementById('verifiedOnly');
+    v.addEventListener('change', () => {
+      VERIFIED_ONLY = !!v.checked;
+      render();
+    });
+
+    // Close panel when clicking map
+    map.on('click', () => panel.classList.remove('open'));
+  }
+
+  async function loadClinics(){
+    countEl.textContent = 'Loading clinics…';
+    try{
+      const res = await fetch(ENDPOINT, { cache: 'no-store' });
+      const rows = await res.json();
+      ALL = (Array.isArray(rows) ? rows : []).map(toClinic);
+      render();
+    }catch(err){
+      console.error('Failed to load clinics', err);
+      countEl.textContent = 'Failed to load clinics';
+    }
+  }
+
+  wireUI();
+  loadClinics();
 </script>
 
 </body>
 </html>
+
