@@ -6,1122 +6,1953 @@
   <title>Prime Regenerative Clinic Directory</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+
   <!-- Mapbox -->
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
 
   <style>
-    :root{
-      --bg:#0b0e13;
-      --panel:#11161f;
-      --muted:#9aa4b2;
-      --text:#e8ecf3;
-      --standard:#3a3f46;
-      --verified:#7DCBEA;
-      --card:#121824;
-      --card2:#0f151f;
-      --line:rgba(255,255,255,.08);
+    :root {
+      /* Core palette */
+      --bg-deep: #080b10;
+      --bg-primary: #0d1117;
+      --bg-elevated: #151c28;
+      --bg-card: #121820;
+      
+      /* Text - WCAG AA compliant */
+      --text-primary: #f0f4f8;
+      --text-secondary: #b8c5d6;
+      --text-muted: #8a9bb4;
+      
+      /* Accents - Brand Cyan */
+      --verified-primary: #7DCBEA;
+      --verified-glow: rgba(125, 203, 234, 0.3);
+      --verified-soft: rgba(125, 203, 234, 0.12);
+      --standard-primary: #64748b;
+      --standard-soft: rgba(100, 116, 139, 0.2);
+      
+      /* Interactive */
+      --accent-warm: #f59e0b;
+      --accent-warm-soft: rgba(245, 158, 11, 0.15);
+      --hover-lift: rgba(255, 255, 255, 0.04);
+      
+      /* Borders */
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-default: rgba(255, 255, 255, 0.1);
+      --border-focus: rgba(125, 203, 234, 0.5);
+      
+      /* Shadows */
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.4);
+      --shadow-verified: 0 0 0 1px var(--verified-primary), 0 8px 32px rgba(125, 203, 234, 0.2);
+      
+      /* Typography */
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      
+      /* Radii */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
     }
 
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: Inter, system-ui, -apple-system, sans-serif;
-      background:#000;
-      color:var(--text);
+    * {
+      box-sizing: border-box;
+    }
+    
+    *:focus-visible {
+      outline: 2px solid var(--verified-primary);
+      outline-offset: 2px;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    /* Skip link for accessibility */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--verified-primary);
+      color: var(--bg-deep);
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      z-index: 1000;
+      transition: top 0.2s;
+    }
+    
+    .skip-link:focus {
+      top: var(--space-md);
     }
 
     /* TOP BAR */
-    .topbar{
-      height:84px;
-      background:#000;
-      border-bottom:1px solid var(--line);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:0 32px;
-      position:relative;
-      z-index:10;
+    .topbar {
+      height: 84px;
+      background: var(--bg-deep);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space-xl);
+      position: relative;
+      z-index: 10;
     }
-    .topbar img{ height:52px; }
-    .topbar a{
-      color:#dbe3f1;
-      text-decoration:none;
-      margin-left:32px;
-      font-size:16px;
-      font-weight:500;
+    
+    .topbar img {
+      height: 52px;
+    }
+    
+    .topbar nav {
+      display: flex;
+      gap: var(--space-lg);
+    }
+    
+    .topbar a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
       transition: color 0.2s;
+      padding: var(--space-xs) 0;
     }
-    .topbar a:hover{color:#fff}
+    
+    .topbar a:hover,
+    .topbar a:focus {
+      color: var(--text-primary);
+    }
 
     /* LAYOUT */
-    .wrap{
-      display:grid;
-      grid-template-columns:380px 1fr;
-      height:calc(100vh - 84px);
-      position:relative;
+    .wrap {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      height: calc(100vh - 84px);
+      position: relative;
     }
 
     /* SIDEBAR */
-    .sidebar{
-      background:linear-gradient(180deg,#0d1118,#0b0e13);
-      padding:22px 18px 0;
-      overflow:hidden;
-      border-right:1px solid var(--line);
-      position:relative;
-      display:flex;
-      flex-direction:column;
-      height:100%;
+    .sidebar {
+      background: linear-gradient(180deg, var(--bg-primary), var(--bg-deep));
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
     }
-    .sidebar-scroll{
-      flex:1;
-      overflow-y:auto;
-      overflow-x:hidden;
-      padding:0 0 16px 0;
+    
+    .sidebar-scroll {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: var(--space-lg);
+      scroll-behavior: smooth;
     }
-    .sidebar h1{
-      font-size:28px;
-      line-height:1.25;
-      margin:0 0 12px;
-      letter-spacing:.2px;
-      font-weight:700;
+    
+    .sidebar-header {
+      margin-bottom: var(--space-lg);
     }
-    .sidebar p{
-      color:#c7d2e4;
-      font-size:14px;
-      margin:0 0 16px;
-      line-height:1.5;
+    
+    .sidebar h1 {
+      font-family: var(--font-display);
+      font-size: 26px;
+      line-height: 1.3;
+      margin: 0 0 var(--space-md);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    .sidebar-intro {
+      color: var(--text-secondary);
+      font-size: 15px;
+      margin: 0;
+      line-height: 1.6;
     }
 
     /* Search */
-    .search{
-      position:sticky;
-      top:0;
-      z-index:3;
-      padding:10px 0 12px;
-      margin:0 0 10px;
-      background:linear-gradient(180deg,#0d1118 80%, rgba(13,17,24,0.95) 90%, rgba(13,17,24,0));
-      backdrop-filter:saturate(1.1) blur(10px);
+    .search-section {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: linear-gradient(180deg, var(--bg-primary) 85%, transparent);
+      padding: var(--space-md) 0 var(--space-lg);
+      margin: 0 calc(-1 * var(--space-lg));
+      padding-left: var(--space-lg);
+      padding-right: var(--space-lg);
     }
-    .search input{
-      width:100%;
-      padding:14px 16px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.10);
-      background:#0f1520;
-      color:var(--text);
-      font-size:14px;
-      outline:none;
+    
+    .search-input-wrap {
+      position: relative;
+    }
+    
+    .search-input-wrap svg {
+      position: absolute;
+      left: var(--space-md);
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      stroke: var(--text-muted);
+      stroke-width: 2;
+      fill: none;
+      pointer-events: none;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 14px 16px 14px 46px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-default);
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 15px;
       transition: all 0.2s;
     }
-    .search input:focus{
-      border-color:rgba(125,203,234,.4);
-      box-shadow: 0 0 0 3px rgba(125,203,234,.12);
+    
+    .search-input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px var(--verified-soft);
+      outline: none;
     }
-    .search input::placeholder{color:#93a0b6}
-    .search-row{
-      display:flex;
-      gap:10px;
-      margin-top:10px;
-      align-items:center;
-      justify-content:space-between;
+    
+    .search-input::placeholder {
+      color: var(--text-muted);
     }
-    .clearBtn{
-      border:1px solid rgba(255,255,255,.10);
-      background:#0f1520;
-      color:#cfe0ff;
-      padding:10px 14px;
-      border-radius:12px;
-      font-weight:600;
-      cursor:pointer;
-      font-size:13px;
-      white-space:nowrap;
+
+    /* Active filters row */
+    .active-filters {
+      display: flex;
+      gap: var(--space-sm);
+      margin-top: var(--space-md);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .pill {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-default);
+      color: var(--text-secondary);
+      font-size: 13px;
+      cursor: pointer;
       transition: all 0.2s;
     }
-    .clearBtn:hover{
-      filter:brightness(1.1);
-      transform: translateY(-1px);
+    
+    .pill:hover,
+    .pill:focus {
+      background: var(--hover-lift);
+      border-color: var(--text-muted);
+    }
+    
+    .pill-label {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    .pill-close {
+      opacity: 0.6;
+      font-size: 11px;
+    }
+    
+    .clear-btn {
+      border: 1px solid var(--border-default);
+      background: transparent;
+      color: var(--text-secondary);
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-left: auto;
+    }
+    
+    .clear-btn:hover,
+    .clear-btn:focus {
+      background: var(--hover-lift);
+      color: var(--text-primary);
     }
 
-    /* Active filter pills */
-    .pills{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top:10px;
+    /* Filter sections */
+    .filter-section {
+      margin-top: var(--space-lg);
     }
-    .pill{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      padding:8px 12px;
-      border-radius:999px;
-      background:#0f1520;
-      border:1px solid rgba(255,255,255,.10);
-      color:#dbe3f1;
-      font-size:12px;
-      cursor:pointer;
-      user-select:none;
+    
+    .filter-label {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 0 0 var(--space-md);
+      font-weight: 700;
+    }
+    
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+    
+    .chip {
+      padding: 10px 16px;
+      border-radius: var(--radius-full);
+      background: var(--bg-elevated);
+      font-size: 14px;
+      font-family: var(--font-body);
+      cursor: pointer;
+      border: 1px solid var(--border-default);
+      color: var(--text-secondary);
       transition: all 0.2s;
     }
-    .pill b{font-weight:700}
-    .pill .x{opacity:.8}
-    .pill:hover{
-      filter:brightness(1.1);
-      transform: translateY(-1px);
+    
+    .chip:hover,
+    .chip:focus {
+      background: var(--hover-lift);
+      color: var(--text-primary);
+    }
+    
+    .chip.active {
+      border-color: var(--verified-primary);
+      background: var(--verified-soft);
+      color: var(--verified-primary);
+      font-weight: 600;
     }
 
-    .filter h3{
-      font-size:11px;
-      letter-spacing:.14em;
-      color:#aeb7c6;
-      margin:20px 0 12px;
-      font-weight:700;
+    /* Verified toggle */
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-elevated);
+      padding: 14px var(--space-md);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-default);
+    }
+    
+    .toggle-label {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    
+    /* Custom toggle switch */
+    .toggle-switch {
+      position: relative;
+      width: 48px;
+      height: 26px;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      cursor: pointer;
+      z-index: 1;
+      margin: 0;
+    }
+    
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      background: var(--standard-soft);
+      border-radius: var(--radius-full);
+      transition: background 0.2s;
+    }
+    
+    .toggle-switch input:checked + .toggle-track {
+      background: var(--verified-primary);
+    }
+    
+    .toggle-thumb {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.2s;
+      pointer-events: none;
+    }
+    
+    .toggle-switch input:checked ~ .toggle-thumb {
+      transform: translateX(22px);
+    }
+    
+    .toggle-switch input:focus-visible + .toggle-track {
+      box-shadow: 0 0 0 3px var(--verified-soft);
     }
 
-    .chips{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
+    /* Results count */
+    .results-summary {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-top: var(--space-lg);
+      padding-bottom: var(--space-md);
+      border-bottom: 1px solid var(--border-subtle);
     }
-    .chip{
-      padding:10px 16px;
-      border-radius:999px;
-      background:#151b26;
-      font-size:14px;
-      cursor:pointer;
-      border:1px solid rgba(255,255,255,.10);
-      user-select:none;
-      transition: all 0.2s;
+    
+    .results-count {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
     }
-    .chip:hover{
-      filter:brightness(1.08);
-      transform: translateY(-1px);
+    
+    .results-breakdown {
+      font-size: 13px;
+      color: var(--text-muted);
     }
-    .chip.active{
-      border-color:rgba(125,203,234,.85);
-      box-shadow:0 0 0 4px rgba(125,203,234,.20);
-      background:#1a2633;
-    }
-
-    /* Toggle */
-    .toggle{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      background:#151b26;
-      padding:14px 16px;
-      border-radius:12px;
-      font-size:14px;
-      border:1px solid rgba(255,255,255,.10);
-    }
-    .toggle span{color:#dbe3f1}
-    .toggle input{transform:scale(1.1)}
-
-    /* Count + breakdown */
-    .count{
-      margin-top:16px;
-      font-size:15px;
-      color:#dbe3f1;
-      display:flex;
-      gap:8px;
-      align-items:baseline;
-      justify-content:space-between;
-      font-weight:600;
-    }
-    .count small{
-      color:#b9c6dd;
-      font-size:12px;
-      white-space:nowrap;
-      font-weight:400;
+    
+    .results-breakdown .verified-count {
+      color: var(--verified-primary);
+      font-weight: 600;
     }
 
     /* Clinic list */
-    .list{
-      margin-top:16px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
+    .clinic-list {
+      margin-top: var(--space-md);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
     }
-    .card{
-      background:linear-gradient(180deg,var(--card),var(--card2));
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:14px;
-      padding:14px;
-      cursor:pointer;
-      box-shadow:0 10px 20px rgba(0,0,0,.20);
+
+    /* Skeleton loading */
+    .skeleton-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-md);
+      animation: shimmer 1.5s infinite;
+    }
+    
+    .skeleton-row {
+      display: flex;
+      gap: var(--space-md);
+      align-items: center;
+    }
+    
+    .skeleton-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-md);
+      background: var(--bg-elevated);
+    }
+    
+    .skeleton-lines {
+      flex: 1;
+    }
+    
+    .skeleton-line {
+      height: 14px;
+      background: var(--bg-elevated);
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    
+    .skeleton-line:last-child {
+      margin-bottom: 0;
+      width: 60%;
+    }
+    
+    .skeleton-pills {
+      display: flex;
+      gap: var(--space-sm);
+      margin-top: var(--space-md);
+    }
+    
+    .skeleton-pill {
+      width: 70px;
+      height: 28px;
+      background: var(--bg-elevated);
+      border-radius: var(--radius-full);
+    }
+    
+    @keyframes shimmer {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-xl) var(--space-md);
+      color: var(--text-muted);
+    }
+    
+    .empty-state-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto var(--space-md);
+      stroke: var(--text-muted);
+      stroke-width: 1.5;
+      fill: none;
+      opacity: 0.5;
+    }
+    
+    .empty-state-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin: 0 0 var(--space-sm);
+    }
+    
+    .empty-state-text {
+      font-size: 14px;
+      margin: 0;
+    }
+
+    /* Clinic card */
+    .clinic-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-md);
+      cursor: pointer;
       transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
     }
-    .card:hover{
-      filter:brightness(1.08);
+    
+    .clinic-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 60%, var(--hover-lift));
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    
+    .clinic-card:hover::before,
+    .clinic-card:focus::before {
+      opacity: 1;
+    }
+    
+    .clinic-card:hover,
+    .clinic-card:focus {
       transform: translateY(-2px);
-      box-shadow:0 14px 28px rgba(0,0,0,.25);
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-default);
     }
-    .card.verified{
-      border-color:rgba(125,203,234,.3);
-      box-shadow:
-        0 10px 20px rgba(0,0,0,.20),
-        0 0 0 1px rgba(125,203,234,.15);
+    
+    /* Verified card styling */
+    .clinic-card.verified {
+      border-color: rgba(125, 203, 234, 0.25);
+      background: linear-gradient(135deg, var(--bg-card), rgba(125, 203, 234, 0.03));
     }
-    .card.verified:hover{
-      box-shadow:
-        0 14px 28px rgba(0,0,0,.25),
-        0 0 0 1px rgba(125,203,234,.25);
+    
+    .clinic-card.verified::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--verified-primary), #5FB8D9);
     }
-    .cardTop{
-      display:flex;
-      gap:12px;
-      align-items:center;
+    
+    .clinic-card.verified:hover,
+    .clinic-card.verified:focus {
+      box-shadow: var(--shadow-verified);
     }
-    .cardLogo{
-      width:48px;height:48px;
-      border-radius:12px;
-      object-fit:contain;
-      background:#0b0e13;
-      border:1px solid rgba(255,255,255,.10);
-      flex:0 0 auto;
+    
+    .card-top {
+      display: flex;
+      gap: var(--space-md);
+      align-items: flex-start;
+      position: relative;
     }
-    .cardTitle{
-      display:flex;
-      flex-direction:column;
-      min-width:0;
-      flex:1;
+    
+    .card-logo {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-md);
+      object-fit: contain;
+      background: var(--bg-deep);
+      border: 1px solid var(--border-subtle);
+      flex-shrink: 0;
     }
-    .cardTitle strong{
-      font-size:15px;
-      line-height:1.3;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      font-weight:600;
+    
+    .card-logo-placeholder {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--bg-elevated), var(--bg-deep));
+      border: 1px solid var(--border-subtle);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .cardTitle span{
-      font-size:13px;
-      color:#c7d2e4;
-      margin-top:3px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+    
+    .card-logo-placeholder svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--text-muted);
+      stroke-width: 1.5;
+      fill: none;
+      opacity: 0.5;
     }
-    .tag{
-      font-size:11px;
-      padding:6px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:#0f1520;
-      color:#dbe3f1;
-      flex:0 0 auto;
-      font-weight:600;
+    
+    .card-content {
+      flex: 1;
+      min-width: 0;
     }
-    .tag.verified{
-      border-color:rgba(125,203,234,.7);
-      box-shadow:0 0 0 4px rgba(125,203,234,.15);
-      color:var(--verified);
-      font-weight:700;
+    
+    .card-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 4px;
+      line-height: 1.3;
     }
-    .cardServices{
-      margin-top:12px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
+    
+    .card-location {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin: 0;
     }
-    .svcPill{
-      font-size:11px;
-      padding:6px 10px;
-      border-radius:999px;
-      background:#0f1520;
-      border:1px solid rgba(255,255,255,.10);
-      color:#dbe3f1;
+    
+    /* Status badge */
+    .status-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .status-badge.verified {
+      background: var(--verified-soft);
+      color: var(--verified-primary);
+      border: 1px solid rgba(125, 203, 234, 0.3);
+      box-shadow: 0 0 12px var(--verified-glow);
+    }
+    
+    .status-badge.standard {
+      background: var(--standard-soft);
+      color: var(--text-muted);
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .card-services {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: var(--space-md);
+    }
+    
+    .service-tag {
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: var(--radius-full);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
     }
 
     /* MAP */
-    #map{width:100%;height:100%}
-
-    /* MARKERS */
-    .marker{
-      width:16px;height:16px;border-radius:50%;
-      background:var(--standard);
-      box-shadow:0 6px 14px rgba(0,0,0,.45);
-      cursor:pointer;
-      border: 2px solid rgba(255,255,255,.2);
-    }
-    .marker.verified{
-      width:20px;height:20px;
-      background:var(--verified);
-      box-shadow:
-        0 8px 18px rgba(0,0,0,.5),
-        0 0 0 8px rgba(125,203,234,.35);
-    }
-    .marker.verified:hover{
-      animation: pulse 1.5s ease-in-out;
-    }
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 8px 18px rgba(0,0,0,.5), 0 0 0 8px rgba(125,203,234,.35); }
-      50% { box-shadow: 0 8px 18px rgba(0,0,0,.5), 0 0 0 12px rgba(125,203,234,.2); }
+    #map {
+      width: 100%;
+      height: 100%;
     }
 
-    /* SIDE PANEL (DETAIL) */
-    .panel{
-      position:absolute;
-      top:84px;
-      right:0;
-      width:440px;
-      max-width:92vw;
-      height:calc(100vh - 84px);
-      background:linear-gradient(180deg,#101622,#0c111a);
-      border-left:1px solid rgba(255,255,255,.10);
-      padding:24px 24px 0;
-      transform:translateX(100%);
+    /* Markers */
+    .marker {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--standard-primary);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+    }
+    
+    .marker:hover {
+      box-shadow: 0 0 0 4px rgba(100, 116, 139, 0.4);
+    }
+    
+    .marker.verified {
+      width: 20px;
+      height: 20px;
+      background: var(--verified-primary);
+      border: 2px solid white;
+      box-shadow: 
+        0 0 0 4px var(--verified-glow),
+        0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    .marker.verified::after {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      background: var(--verified-glow);
+      animation: marker-pulse 2s infinite;
+      z-index: -1;
+    }
+    
+    @keyframes marker-pulse {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.3); opacity: 0; }
+    }
+
+    /* Detail Panel */
+    .panel {
+      position: absolute;
+      top: 84px;
+      right: 0;
+      width: 480px;
+      max-width: 100%;
+      height: calc(100vh - 84px);
+      background: linear-gradient(180deg, var(--bg-primary), var(--bg-deep));
+      border-left: 1px solid var(--border-subtle);
+      transform: translateX(100%);
       transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index:9;
-      overflow:auto;
-      box-shadow: -10px 0 40px rgba(0,0,0,.4);
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
     }
-    .panel.open{transform:none}
-
-    .panelHeader{
-      display:flex;
-      gap:16px;
-      align-items:flex-start;
-      margin-bottom:16px;
+    
+    .panel.open {
+      transform: translateX(0);
+      box-shadow: -20px 0 60px rgba(0, 0, 0, 0.5);
     }
-    .panelLogo{
-      width:80px;height:80px;
-      border-radius:16px;
-      object-fit:contain;
-      background:#0b0e13;
-      border:1px solid rgba(255,255,255,.10);
-      flex:0 0 auto;
+    
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: var(--space-lg);
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-primary);
     }
-    .panelTitle{
-      min-width:0;
-      flex:1;
+    
+    .panel-close {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-default);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
     }
-    .panelTitle h2{
-      margin:0;
-      font-size:24px;
-      letter-spacing:.2px;
-      line-height:1.3;
-      font-weight:700;
+    
+    .panel-close:hover,
+    .panel-close:focus {
+      background: var(--hover-lift);
+      color: var(--text-primary);
     }
-    .badge{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      margin-top:10px;
-      color:var(--verified);
-      font-size:14px;
-      font-weight:800;
-      text-shadow:0 0 20px rgba(125,203,234,.5);
+    
+    .panel-close svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
     }
-    .badge svg{
-      width:18px;
-      height:18px;
-      fill:currentColor;
-      filter: drop-shadow(0 0 8px rgba(125,203,234,.6));
+    
+    .panel-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-lg);
     }
-
-    .panelMeta{
-      margin-top:18px;
-      border-top:1px solid rgba(255,255,255,.10);
-      border-bottom:1px solid rgba(255,255,255,.10);
-      padding:16px 0;
+    
+    .panel-brand {
+      display: flex;
+      gap: var(--space-md);
+      align-items: flex-start;
+      flex: 1;
+      min-width: 0;
+      margin-right: var(--space-md);
     }
-    .metaRow{
-      display:flex;
-      gap:12px;
-      align-items:flex-start;
-      margin:12px 0;
-      color:#dbe3f1;
-      font-size:14px;
-      line-height:1.5;
+    
+    .panel-logo {
+      width: 72px;
+      height: 72px;
+      border-radius: var(--radius-md);
+      object-fit: contain;
+      background: var(--bg-deep);
+      border: 1px solid var(--border-subtle);
+      flex-shrink: 0;
     }
-    .metaIcon{
-      width:20px;
-      height:20px;
-      opacity:.85;
-      flex:0 0 auto;
-      margin-top:2px;
-      stroke:currentColor;
-      fill:none;
-      stroke-width:2;
-      stroke-linecap:round;
-      stroke-linejoin:round;
+    
+    .panel-logo-placeholder {
+      width: 72px;
+      height: 72px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--bg-elevated), var(--bg-deep));
+      border: 1px solid var(--border-subtle);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-
-    .desc{
-      margin:18px 0;
-      color:#dbe3f1;
-      font-size:15px;
-      line-height:1.65;
-      background:rgba(255,255,255,.02);
-      padding:16px;
-      border-radius:12px;
-      border-left:3px solid rgba(125,203,234,.3);
+    
+    .panel-logo-placeholder svg {
+      width: 32px;
+      height: 32px;
+      stroke: var(--text-muted);
+      stroke-width: 1.5;
+      fill: none;
+      opacity: 0.5;
     }
-
-    .contactGrid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-      margin:18px 0;
+    
+    .panel-title-wrap {
+      min-width: 0;
     }
-    .contactBtn{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      padding:14px;
-      background:#151b26;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:12px;
-      color:#dbe3f1;
-      text-decoration:none;
-      font-size:14px;
-      font-weight:600;
+    
+    .panel-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      margin: 0 0 var(--space-sm);
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+    
+    .panel-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+    }
+    
+    .panel-badge.verified {
+      background: var(--verified-soft);
+      color: var(--verified-primary);
+      border: 1px solid rgba(125, 203, 234, 0.3);
+    }
+    
+    .panel-badge.verified svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+    
+    .panel-badge.standard {
+      background: var(--standard-soft);
+      color: var(--text-muted);
+      border: 1px solid var(--border-subtle);
+    }
+    
+    /* Panel meta section */
+    .panel-meta {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      padding: var(--space-lg) 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    .meta-row {
+      display: flex;
+      gap: var(--space-md);
+      align-items: flex-start;
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+    
+    .meta-row svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--text-muted);
+      stroke-width: 2;
+      fill: none;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    
+    /* Panel description */
+    .panel-description {
+      margin: var(--space-lg) 0;
+      padding: var(--space-md);
+      background: var(--bg-elevated);
+      border-radius: var(--radius-md);
+      border-left: 3px solid var(--verified-primary);
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    
+    /* Contact buttons */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-sm);
+      margin: var(--space-lg) 0;
+    }
+    
+    .contact-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      padding: 14px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
       transition: all 0.2s;
     }
-    .contactBtn svg{
-      width:18px;
-      height:18px;
-      stroke:currentColor;
-      fill:none;
-      stroke-width:2;
-      stroke-linecap:round;
-      stroke-linejoin:round;
+    
+    .contact-btn:hover,
+    .contact-btn:focus {
+      background: var(--hover-lift);
+      color: var(--text-primary);
+      transform: translateY(-1px);
     }
-    .contactBtn:hover{
-      filter:brightness(1.12);
-      transform:translateY(-2px);
-      box-shadow:0 6px 16px rgba(0,0,0,.2);
+    
+    .contact-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
     }
-
-    .infoCards{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-      margin:18px 0;
+    
+    /* Info cards */
+    .info-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-sm);
+      margin: var(--space-lg) 0;
     }
-    .infoCard{
-      background:rgba(255,255,255,.02);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:10px;
-      padding:12px;
-      text-align:center;
+    
+    .info-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      text-align: center;
     }
-    .infoCard-label{
-      font-size:11px;
-      color:#b9c6dd;
-      text-transform:uppercase;
-      letter-spacing:.1em;
-      margin-bottom:6px;
-      font-weight:600;
+    
+    .info-card-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: var(--space-xs);
+      font-weight: 600;
     }
-    .infoCard-value{
-      font-size:14px;
-      color:#dbe3f1;
-      font-weight:600;
+    
+    .info-card-value {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-secondary);
     }
-    .infoCard-value.yes{color:#7DCBEA}
-    .infoCard-value.no{color:#93a0b6}
-
-    .panelCta{
-      position:sticky;
-      bottom:0;
-      padding:20px 0 24px;
-      background:linear-gradient(180deg, rgba(12,17,26,0), #0c111a 40%);
-      backdrop-filter: blur(8px);
+    
+    .info-card-value.yes {
+      color: var(--verified-primary);
     }
-    .panelCta a{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      width:100%;
-      padding:18px;
-      text-align:center;
-      background:linear-gradient(135deg, var(--verified), #5FBBE0);
-      color:#001018;
-      font-weight:900;
-      text-decoration:none;
-      border-radius:14px;
-      box-shadow:0 12px 28px rgba(125,203,234,.25);
+    
+    .info-card-value.no {
+      color: var(--text-muted);
+    }
+    
+    /* Panel CTA */
+    .panel-cta {
+      padding: var(--space-lg);
+      background: linear-gradient(180deg, transparent, var(--bg-primary));
+      margin-top: auto;
+    }
+    
+    .panel-cta-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--verified-primary), #5FB8D9);
+      color: var(--bg-deep);
+      font-weight: 700;
+      font-size: 15px;
+      text-decoration: none;
+      border-radius: var(--radius-md);
       transition: all 0.2s;
-      font-size:16px;
+      box-shadow: 0 8px 24px var(--verified-glow);
     }
-    .panelCta a:hover{
-      transform:translateY(-2px);
-      box-shadow:0 16px 36px rgba(125,203,234,.35);
+    
+    .panel-cta-btn:hover,
+    .panel-cta-btn:focus {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px var(--verified-glow);
     }
-    .panelCta svg{
-      width:20px;
-      height:20px;
-      stroke:currentColor;
-      fill:none;
-      stroke-width:2.5;
-      stroke-linecap:round;
-      stroke-linejoin:round;
+    
+    .panel-cta-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2.5;
+      fill: none;
     }
 
-    /* FOOTER (sidebar) */
-    .dir-footer{
-      padding:16px 18px;
-      font-size:12px;
-      color:#b9c6dd;
-      border-top:1px solid rgba(255,255,255,.08);
-      background:#0b0e13;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      flex-shrink:0;
+    /* Footer */
+    .sidebar-footer {
+      padding: var(--space-md) var(--space-lg);
+      font-size: 12px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-deep);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
     }
-    .dir-footer a{
-      color:#cfe0ff;
-      text-decoration:none;
-      margin-left:14px;
+    
+    .sidebar-footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      margin-left: var(--space-md);
       transition: color 0.2s;
     }
-    .dir-footer a:hover{color:#fff}
-
-    /* MOBILE */
-    @media(max-width:900px){
-      .wrap{grid-template-columns:1fr}
-      .sidebar{display:none}
-      .panel{width:100%; padding:20px 20px 0}
-      .panelTitle h2{font-size:22px}
-      .contactGrid{grid-template-columns:1fr}
+    
+    .sidebar-footer a:hover,
+    .sidebar-footer a:focus {
+      color: var(--text-primary);
     }
 
-    /* ===== EMBED MODE (sales page iframe) ===== */
+    /* Mobile filter toggle */
+    .mobile-filter-toggle {
+      display: none;
+      position: fixed;
+      bottom: var(--space-lg);
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 14px 24px;
+      background: var(--verified-primary);
+      color: var(--bg-deep);
+      border: none;
+      border-radius: var(--radius-full);
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      z-index: 15;
+      box-shadow: var(--shadow-lg);
+      transition: all 0.2s;
+    }
+    
+    .mobile-filter-toggle:hover {
+      transform: translateX(-50%) translateY(-2px);
+    }
+    
+    .mobile-filter-toggle svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2.5;
+      fill: none;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    /* Mobile */
+    @media (max-width: 900px) {
+      .wrap {
+        grid-template-columns: 1fr;
+      }
+      
+      .sidebar {
+        position: fixed;
+        inset: 84px 0 0 0;
+        z-index: 15;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      
+      .mobile-filter-toggle {
+        display: flex;
+        align-items: center;
+      }
+      
+      .panel {
+        width: 100%;
+        top: 0;
+        height: 100vh;
+      }
+      
+      .topbar {
+        padding: 0 var(--space-md);
+      }
+      
+      .topbar nav {
+        display: none;
+      }
+    }
+
+    /* Embed mode */
     body.embed .topbar,
-    body.embed .dir-footer{
-      display:none !important;
+    body.embed .sidebar-footer {
+      display: none !important;
     }
-    body.embed .wrap{
-      height:100vh;
+    
+    body.embed .wrap {
+      height: 100vh;
     }
-    body.embed .panel{
-      top:0;
-      height:100vh;
+    
+    body.embed .panel {
+      top: 0;
+      height: 100vh;
+    }
+    
+    body.embed .sidebar {
+      top: 0;
     }
   </style>
 </head>
 
 <body>
+  <!-- Skip link for keyboard users -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
 
-<!-- TOP BAR -->
-<div class="topbar">
-  <img src="https://storage.googleapis.com/msgsndr/HjPB77l6JDSqhEzt2YNT/media/66c4a87c66f58d551de0ed1f.png" alt="Prime Regenerative">
-  <div>
-    <a href="https://www.primeregenerative.com/" target="_blank" rel="noopener">Home</a>
-    <a href="https://primeregenerative.com/verified-directory" target="_blank" rel="noopener">About Prime Verified</a>
-    <a href="https://primeregenerative.com/verified-directory" target="_blank" rel="noopener">Clinic Owner?</a>
+  <!-- TOP BAR -->
+  <header class="topbar" role="banner">
+    <img src="https://storage.googleapis.com/msgsndr/HjPB77l6JDSqhEzt2YNT/media/66c4a87c66f58d551de0ed1f.png" alt="Prime Regenerative">
+    <nav aria-label="Main navigation">
+      <a href="https://www.primeregenerative.com/" target="_blank" rel="noopener">Home</a>
+      <a href="https://primeregenerative.com/verified-directory" target="_blank" rel="noopener">About Prime Verified</a>
+      <a href="https://primeregenerative.com/verified-directory" target="_blank" rel="noopener">Clinic Owner?</a>
+    </nav>
+  </header>
+
+  <div class="wrap">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar" aria-label="Clinic filters and list">
+      <div class="sidebar-scroll">
+        <div class="sidebar-header">
+          <h1>Find Top Regenerative &amp; Functional Medicine Providers</h1>
+          <p class="sidebar-intro">Vetted, trusted clinics approved through our rigorous Prime Regenerative screening process.</p>
+        </div>
+
+        <div class="search-section">
+          <div class="search-input-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input 
+              type="search" 
+              id="searchInput" 
+              class="search-input" 
+              placeholder="Search clinic, city, or state…"
+              aria-label="Search clinics"
+            >
+          </div>
+
+          <div class="active-filters" id="activeFilters" aria-live="polite">
+            <!-- Pills inserted here -->
+            <button type="button" class="clear-btn" id="clearBtn" style="display: none;">Clear all</button>
+          </div>
+        </div>
+
+        <!-- Type filter -->
+        <div class="filter-section" role="group" aria-labelledby="typeFilterLabel">
+          <h2 class="filter-label" id="typeFilterLabel">Type</h2>
+          <div class="chips" id="typeFilter" role="radiogroup">
+            <button type="button" class="chip active" data-type="all" role="radio" aria-checked="true">All</button>
+            <button type="button" class="chip" data-type="regenerative" role="radio" aria-checked="false">Regenerative</button>
+            <button type="button" class="chip" data-type="functional" role="radio" aria-checked="false">Functional</button>
+          </div>
+        </div>
+
+        <!-- Services filter -->
+        <div class="filter-section" role="group" aria-labelledby="serviceFilterLabel">
+          <h2 class="filter-label" id="serviceFilterLabel">Services</h2>
+          <div class="chips" id="serviceFilter">
+            <button type="button" class="chip" data-service="PRP" aria-pressed="false">PRP</button>
+            <button type="button" class="chip" data-service="Exosomes" aria-pressed="false">Exosomes</button>
+            <button type="button" class="chip" data-service="Wharton's Jelly" aria-pressed="false">Wharton's Jelly</button>
+            <button type="button" class="chip" data-service="Shockwave" aria-pressed="false">Shockwave</button>
+            <button type="button" class="chip" data-service="Peptides" aria-pressed="false">Peptides</button>
+            <button type="button" class="chip" data-service="Hormone Therapy" aria-pressed="false">Hormone Therapy</button>
+            <button type="button" class="chip" data-service="IV Therapy" aria-pressed="false">IV Therapy</button>
+            <button type="button" class="chip" data-service="Joint Pain" aria-pressed="false">Joint Pain</button>
+            <button type="button" class="chip" data-service="Hair Loss" aria-pressed="false">Hair Loss</button>
+            <button type="button" class="chip" data-service="Weight Loss" aria-pressed="false">Weight Loss</button>
+          </div>
+        </div>
+
+        <!-- Verified filter -->
+        <div class="filter-section">
+          <h2 class="filter-label">Verified Status</h2>
+          <div class="toggle-wrap">
+            <span class="toggle-label">Prime Verified only</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="verifiedOnly" aria-label="Show only Prime Verified clinics">
+              <span class="toggle-track"></span>
+              <span class="toggle-thumb"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Results summary -->
+        <div class="results-summary" aria-live="polite">
+          <span class="results-count" id="resultsCount">Loading clinics…</span>
+          <span class="results-breakdown" id="resultsBreakdown"></span>
+        </div>
+
+        <!-- Clinic list -->
+        <div class="clinic-list" id="clinicList" role="list" aria-label="Clinic results" id="main-content">
+          <!-- Loading skeletons -->
+          <div class="skeleton-card" aria-hidden="true">
+            <div class="skeleton-row">
+              <div class="skeleton-avatar"></div>
+              <div class="skeleton-lines">
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line"></div>
+              </div>
+            </div>
+            <div class="skeleton-pills">
+              <div class="skeleton-pill"></div>
+              <div class="skeleton-pill"></div>
+              <div class="skeleton-pill"></div>
+            </div>
+          </div>
+          <div class="skeleton-card" aria-hidden="true">
+            <div class="skeleton-row">
+              <div class="skeleton-avatar"></div>
+              <div class="skeleton-lines">
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line"></div>
+              </div>
+            </div>
+            <div class="skeleton-pills">
+              <div class="skeleton-pill"></div>
+              <div class="skeleton-pill"></div>
+            </div>
+          </div>
+          <div class="skeleton-card" aria-hidden="true">
+            <div class="skeleton-row">
+              <div class="skeleton-avatar"></div>
+              <div class="skeleton-lines">
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line"></div>
+              </div>
+            </div>
+            <div class="skeleton-pills">
+              <div class="skeleton-pill"></div>
+              <div class="skeleton-pill"></div>
+              <div class="skeleton-pill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="sidebar-footer">
+        <div>© 2025 Prime Regenerative</div>
+        <nav aria-label="Footer links">
+          <a href="https://primeregenerative.com/privacy" target="_blank" rel="noopener">Privacy</a>
+          <a href="https://primeregenerative.com/terms-of-service-7568" target="_blank" rel="noopener">Terms</a>
+          <a href="https://primeregenerative.com/verified-directory" target="_blank" rel="noopener">Clinic Owner?</a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- MAP -->
+    <main id="map" role="application" aria-label="Map showing clinic locations"></main>
   </div>
-</div>
 
-<div class="wrap">
+  <!-- Mobile filter toggle -->
+  <button type="button" class="mobile-filter-toggle" id="mobileFilterToggle" aria-expanded="false" aria-controls="sidebar">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <line x1="4" y1="6" x2="20" y2="6"></line>
+      <line x1="4" y1="12" x2="20" y2="12"></line>
+      <line x1="4" y1="18" x2="20" y2="18"></line>
+    </svg>
+    Filters &amp; List
+  </button>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-scroll">
-      <div class="search">
-        <h1>Browse our Directory of Top Regenerative and Functional Medicine Providers</h1>
-        <p>Vetted, trusted clinics approved through our rigorous Prime Regenerative screening process.</p>
+  <!-- Detail Panel -->
+  <div class="panel" id="panel" role="dialog" aria-labelledby="panelTitle" aria-hidden="true"></div>
 
-        <input id="q" type="text" placeholder="Search clinic, city, or state…" />
+  <script>
+    // ============================================
+    // CONSTANTS
+    // ============================================
+    const CLINIC_TYPES = {
+      ALL: 'all',
+      REGENERATIVE: 'regenerative',
+      FUNCTIONAL: 'functional'
+    };
 
-        <div class="search-row">
-          <div class="pills" id="pills"></div>
-          <button class="clearBtn" id="clearBtn" type="button">Clear</button>
-        </div>
-      </div>
+    const TIER_VERIFIED = 'verified';
 
-      <div class="filter" id="typeFilter">
-        <h3>TYPE</h3>
-        <div class="chips">
-          <div class="chip active" data-type="all">All</div>
-          <div class="chip" data-type="regenerative">Regenerative</div>
-          <div class="chip" data-type="functional">Functional</div>
-        </div>
-      </div>
+    // ============================================
+    // STATE
+    // ============================================
+    const AppState = {
+      type: CLINIC_TYPES.ALL,
+      services: new Set(),
+      verifiedOnly: false,
+      query: '',
+      clinics: [],
+      markers: new Map()
+    };
 
-      <div class="filter" id="serviceFilter">
-        <h3>SERVICES</h3>
-        <div class="chips">
-          <div class="chip" data-service="PRP">PRP</div>
-          <div class="chip" data-service="Exosomes">Exosomes</div>
-          <div class="chip" data-service="Wharton's Jelly">Wharton's Jelly</div>
-          <div class="chip" data-service="Shockwave">Shockwave</div>
-          <div class="chip" data-service="Peptides">Peptides</div>
-          <div class="chip" data-service="Hormone Therapy">Hormone Therapy</div>
-          <div class="chip" data-service="IV Therapy">IV Therapy</div>
-          <div class="chip" data-service="Joint Pain">Joint Pain</div>
-          <div class="chip" data-service="Hair Loss">Hair Loss</div>
-          <div class="chip" data-service="Weight Loss">Weight Loss</div>
-        </div>
-      </div>
+    // ============================================
+    // DOM REFERENCES
+    // ============================================
+    const DOM = {
+      panel: document.getElementById('panel'),
+      resultsCount: document.getElementById('resultsCount'),
+      resultsBreakdown: document.getElementById('resultsBreakdown'),
+      clinicList: document.getElementById('clinicList'),
+      activeFilters: document.getElementById('activeFilters'),
+      searchInput: document.getElementById('searchInput'),
+      clearBtn: document.getElementById('clearBtn'),
+      verifiedOnly: document.getElementById('verifiedOnly'),
+      sidebar: document.getElementById('sidebar'),
+      mobileFilterToggle: document.getElementById('mobileFilterToggle')
+    };
 
-      <div class="filter">
-        <h3>VERIFIED</h3>
-        <div class="toggle">
-          <span>Prime Verified only</span>
-          <input type="checkbox" id="verifiedOnly">
-        </div>
-      </div>
+    // ============================================
+    // UTILITIES
+    // ============================================
+    
+    // Sanitize HTML to prevent XSS
+    function escapeHtml(str) {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
 
-      <div class="count" id="count">
-        <span>Loading clinics…</span>
-        <small id="breakdown"></small>
-      </div>
+    function normalizeType(row) {
+      const raw = String(row.type || '').toLowerCase().trim();
+      if (raw === CLINIC_TYPES.FUNCTIONAL || raw === CLINIC_TYPES.REGENERATIVE) return raw;
+      if (raw.includes('functional')) return CLINIC_TYPES.FUNCTIONAL;
+      if (raw.includes('regenerative')) return CLINIC_TYPES.REGENERATIVE;
+      return raw || CLINIC_TYPES.REGENERATIVE;
+    }
 
-      <!-- Clinic list -->
-      <div class="list" id="list"></div>
-    </div>
+    function isVerified(row) {
+      return String(row.tier || '').toLowerCase().trim() === TIER_VERIFIED;
+    }
 
-    <!-- FOOTER -->
-    <div class="dir-footer">
-      <div>© 2025 Prime Regenerative</div>
-      <div>
-        <a href="https://primeregenerative.com/privacy" target="_blank" rel="noopener">Privacy</a>
-        <a href="https://primeregenerative.com/terms-of-service-7568" target="_blank" rel="noopener">Terms</a>
-        <a href="https://primeregenerative.com/verified-directory" target="_blank" rel="noopener">Clinic Owner?</a>
-      </div>
-    </div>
-  </aside>
+    function normalizeServices(row) {
+      return String(row.services || '')
+        .split(',')
+        .map(s => s.trim().replace(/[\u2018\u2019]/g, "'"))
+        .filter(Boolean);
+    }
 
-  <!-- MAP -->
-  <div id="map"></div>
-</div>
+    function safeSite(url) {
+      const u = String(url || '').trim();
+      if (!u) return '#';
+      if (u.startsWith('http://') || u.startsWith('https://')) return u;
+      return 'https://' + u;
+    }
 
-<!-- SIDE PANEL -->
-<div class="panel" id="panel"></div>
+    function formatPhone(phone) {
+      const p = String(phone || '').replace(/\D/g, '');
+      if (p.length === 10) return `(${p.slice(0, 3)}) ${p.slice(3, 6)}-${p.slice(6)}`;
+      if (p.length === 11) return `+${p[0]} (${p.slice(1, 4)}) ${p.slice(4, 7)}-${p.slice(7)}`;
+      return phone || '';
+    }
 
-<script>
-  /* ===== EMBED MODE (sales page iframe) ===== */
-  if (new URLSearchParams(window.location.search).has('embed')) {
-    document.body.classList.add('embed');
-  }
-
-  /* MAPBOX TOKEN */
-  mapboxgl.accessToken =
-    'pk.eyJ1IjoicHJpbWVyZWdlbmVyYXRpdmUiLCJhIjoiY21rZTk1dHB4MDRiYjNlcHBheTJubGh0ayJ9.R9IN8o-u1xnjry7a8BkMsw';
-
-  /* APPS SCRIPT ENDPOINT (APPROVED-ONLY JSON) */
-  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbxs9SA3C7rRMgoxWNTFqZ5Ouyy603WpIgczlwvANtlvmHWfCI5QSwXb0BJvax5MqCGF/exec';
-
-  const map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/light-v11',
-    center: [-98, 39],
-    zoom: 3.4,
-    renderWorldCopies: false,
-    maxBounds: [[-180, -85], [180, 85]]
-  });
-
-  map.addControl(new mapboxgl.NavigationControl());
-
-  map.on('load', () => {
-    map.resize();
-    map.jumpTo({ center: [-98, 39], zoom: 3.4 });
-  });
-
-  const panel = document.getElementById('panel');
-  const countEl = document.getElementById('count');
-  const breakdownEl = document.getElementById('breakdown');
-  const listEl = document.getElementById('list');
-  const pillsEl = document.getElementById('pills');
-  const qEl = document.getElementById('q');
-
-  // Filter state
-  let TYPE = 'all';
-  let SERVICES = new Set();
-  let VERIFIED_ONLY = false;
-  let Q = '';
-
-  // Data
-  let ALL = [];
-  const markerById = new Map();
-
-  function normalizeType(row){
-    const raw = String(row.type || '').toLowerCase().trim();
-    if (raw === 'functional' || raw === 'regenerative') return raw;
-    if (raw.includes('functional')) return 'functional';
-    if (raw.includes('regenerative')) return 'regenerative';
-    return raw || 'regenerative';
-  }
-
-  function isVerified(row){
-    return String(row.tier || '').toLowerCase().trim() === 'verified';
-  }
-
-  function normalizeServices(row){
-    return String(row.services || '')
-      .split(',')
-      .map(s => s.trim().replace(/[\u2018\u2019]/g, "'"))
-      .filter(Boolean);
-  }
-
-  function safeSite(url){
-    const u = String(url || '').trim();
-    if (!u) return '#';
-    if (u.startsWith('http://') || u.startsWith('https://')) return u;
-    return 'https://' + u;
-  }
-
-  function formatPhone(phone){
-    const p = String(phone || '').replace(/\D/g,'');
-    if (p.length === 10) return `(${p.slice(0,3)}) ${p.slice(3,6)}-${p.slice(6)}`;
-    if (p.length === 11) return `+${p[0]} (${p.slice(1,4)}) ${p.slice(4,7)}-${p.slice(7)}`;
-    return phone || '';
-  }
-
-  function toClinic(row){
-    const services = normalizeServices(row);
-    const cityState = [row.city, row.state].filter(Boolean).join(', ');
-
-    const safeYesNo = (val) => {
+    function safeYesNo(val) {
       const v = String(val || '').toLowerCase().trim();
       if (v === 'yes') return 'Yes';
       if (v === 'no') return 'No';
       return 'Unknown';
-    };
-
-    return {
-      id: row.id || row.slug || row.clinic_name || Math.random().toString(36).slice(2),
-      name: row.clinic_name || row.name || 'Unnamed Clinic',
-      slug: row.slug || '',
-      type: normalizeType(row),
-      verified: isVerified(row),
-      address: row.address || '',
-      city: cityState,
-      lat: Number(row.lat),
-      lng: Number(row.lng),
-      phone: String(row.phone || ''),
-      phoneFormatted: formatPhone(row.phone),
-      website: safeSite(row.website),
-      email: row.public_email || '',
-      services,
-      description: row.description || '',
-      logo_url: row.logo_url || '',
-      accepting: safeYesNo(row.accepting_new_patients),
-      telehealth: safeYesNo(row.telehealth),
-      financing: row.financing_available || 'Unknown'
-    };
-  }
-
-  function matchesSearch(c){
-    if (!Q) return true;
-    const hay = `${c.name} ${c.city} ${c.address} ${c.services.join(' ')}`.toLowerCase();
-    return hay.includes(Q);
-  }
-
-  function hasServices(c){
-    if (SERVICES.size === 0) return true;
-    const set = new Set(c.services.map(s => s.toLowerCase().replace(/[\u2018\u2019]/g, "'")));
-    for (const want of SERVICES){
-      const normalized = want.toLowerCase().replace(/[\u2018\u2019]/g, "'");
-      if (!set.has(normalized)) return false;
     }
-    return true;
-  }
 
-  function passesFilters(c){
-    if (!Number.isFinite(c.lat) || !Number.isFinite(c.lng)) return false;
-    if (TYPE !== 'all' && c.type !== TYPE) return false;
-    if (VERIFIED_ONLY && !c.verified) return false;
-    if (!hasServices(c)) return false;
-    if (!matchesSearch(c)) return false;
-    return true;
-  }
+    // ============================================
+    // DATA TRANSFORMATION
+    // ============================================
+    function toClinic(row) {
+      const services = normalizeServices(row);
+      const cityState = [row.city, row.state].filter(Boolean).join(', ');
 
-  function flyToClinic(c){
-    map.flyTo({ center:[c.lng, c.lat], zoom:12.5, speed:1.4, curve:1.3 });
-  }
-
-  function createAllMarkers(){
-    ALL.forEach(c => {
-      if (!Number.isFinite(c.lat) || !Number.isFinite(c.lng)) return;
-
-      const el = document.createElement('div');
-      el.className = 'marker' + (c.verified ? ' verified' : '');
-
-      el.onclick = (e) => {
-        e.stopPropagation();
-        openPanel(c);
+      return {
+        id: row.id || row.slug || row.clinic_name || Math.random().toString(36).slice(2),
+        name: row.clinic_name || row.name || 'Unnamed Clinic',
+        slug: row.slug || '',
+        type: normalizeType(row),
+        verified: isVerified(row),
+        address: row.address || '',
+        city: cityState,
+        lat: Number(row.lat),
+        lng: Number(row.lng),
+        phone: String(row.phone || ''),
+        phoneFormatted: formatPhone(row.phone),
+        website: safeSite(row.website),
+        email: row.public_email || '',
+        services,
+        description: row.description || '',
+        logo_url: row.logo_url || '',
+        accepting: safeYesNo(row.accepting_new_patients),
+        telehealth: safeYesNo(row.telehealth),
+        financing: row.financing_available || 'Unknown'
       };
-
-      const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
-        .setLngLat([c.lng, c.lat])
-        .addTo(map);
-
-      markerById.set(c.id, marker);
-    });
-  }
-
-  function updateMarkerVisibility(){
-    ALL.forEach(c => {
-      const marker = markerById.get(c.id);
-      if (!marker) return;
-      marker.getElement().style.display = passesFilters(c) ? '' : 'none';
-    });
-  }
-
-  function openPanel(c){
-    const logo = c.logo_url
-      ? `<img class="panelLogo" src="${c.logo_url}" alt="${c.name} logo">`
-      : `<div class="panelLogo" aria-hidden="true"></div>`;
-
-    const typeLabel = c.type === 'functional' ? 'Functional Medicine' : 'Regenerative Medicine';
-
-    const verifiedBadge = c.verified
-      ? `<div class="badge">
-          <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path></svg>
-          Prime Verified Clinic
-        </div>`
-      : `<div class="badge" style="opacity:.5;color:#dbe3f1;text-shadow:none;font-weight:600">Prime Directory Listing</div>`;
-
-    const phoneBtn = c.phone
-      ? `<a href="tel:${c.phone}" class="contactBtn">
-          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path></svg>
-          ${c.phoneFormatted || 'Call'}
-        </a>`
-      : '';
-
-    const emailBtn = c.email
-      ? `<a href="mailto:${c.email}" class="contactBtn">
-          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-          Email
-        </a>`
-      : '';
-
-    const contactSection = (phoneBtn || emailBtn)
-      ? `<div class="contactGrid">${phoneBtn}${emailBtn}</div>`
-      : '';
-
-    panel.innerHTML = `
-      <div class="panelHeader">
-        ${logo}
-        <div class="panelTitle">
-          <h2>${c.name}</h2>
-          ${verifiedBadge}
-        </div>
-      </div>
-
-      <div class="panelMeta">
-        <div class="metaRow">
-          <svg class="metaIcon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-          <div>${typeLabel}</div>
-        </div>
-        <div class="metaRow">
-          <svg class="metaIcon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          <div>${c.city || c.address}</div>
-        </div>
-        ${c.services.length ? `<div class="metaRow">
-          <svg class="metaIcon" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"></path></svg>
-          <div>${c.services.join(', ')}</div>
-        </div>` : ''}
-      </div>
-
-      ${c.description ? `<div class="desc">${c.description}</div>` : ''}
-
-      ${contactSection}
-
-      <div class="infoCards">
-        <div class="infoCard">
-          <div class="infoCard-label">New Patients</div>
-          <div class="infoCard-value ${c.accepting === 'Yes' ? 'yes' : c.accepting === 'No' ? 'no' : ''}">${c.accepting}</div>
-        </div>
-        <div class="infoCard">
-          <div class="infoCard-label">Telehealth</div>
-          <div class="infoCard-value ${c.telehealth === 'Yes' ? 'yes' : c.telehealth === 'No' ? 'no' : ''}">${c.telehealth}</div>
-        </div>
-      </div>
-
-      <div class="panelCta">
-        <a href="${c.website}" target="_blank" rel="noopener">
-          Visit Clinic Website
-          <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-        </a>
-      </div>
-    `;
-    panel.classList.add('open');
-  }
-
-  function setPills(){
-    const pills = [];
-
-    if (TYPE !== 'all') pills.push({ key:'type', label:`Type: ${TYPE}` });
-
-    for (const s of SERVICES){
-      pills.push({ key:'svc', value:s, label:s });
     }
 
-    if (VERIFIED_ONLY) pills.push({ key:'verified', label:'Prime Verified only' });
+    // ============================================
+    // FILTERING
+    // ============================================
+    function matchesSearch(clinic) {
+      if (!AppState.query) return true;
+      const hay = `${clinic.name} ${clinic.city} ${clinic.address} ${clinic.services.join(' ')}`.toLowerCase();
+      return hay.includes(AppState.query);
+    }
 
-    if (Q) pills.push({ key:'q', label:`Search: "${Q}"` });
+    function hasServices(clinic) {
+      if (AppState.services.size === 0) return true;
+      const clinicServices = new Set(clinic.services.map(s => s.toLowerCase().replace(/[\u2018\u2019]/g, "'")));
+      for (const want of AppState.services) {
+        const normalized = want.toLowerCase().replace(/[\u2018\u2019]/g, "'");
+        if (!clinicServices.has(normalized)) return false;
+      }
+      return true;
+    }
 
-    pillsEl.innerHTML = pills.map(p => `
-      <div class="pill" data-key="${p.key}" data-value="${p.value || ''}">
-        <b>${p.label}</b><span class="x">✕</span>
-      </div>
-    `).join('');
+    function passesFilters(clinic) {
+      if (!Number.isFinite(clinic.lat) || !Number.isFinite(clinic.lng)) return false;
+      if (AppState.type !== CLINIC_TYPES.ALL && clinic.type !== AppState.type) return false;
+      if (AppState.verifiedOnly && !clinic.verified) return false;
+      if (!hasServices(clinic)) return false;
+      if (!matchesSearch(clinic)) return false;
+      return true;
+    }
 
-    pillsEl.querySelectorAll('.pill').forEach(el => {
-      el.addEventListener('click', () => {
-        const key = el.dataset.key;
-        const val = el.dataset.value;
+    // ============================================
+    // MAP SETUP
+    // ============================================
+    if (new URLSearchParams(window.location.search).has('embed')) {
+      document.body.classList.add('embed');
+    }
 
-        if (key === 'type') TYPE = 'all';
-        if (key === 'svc') SERVICES.delete(val);
-        if (key === 'verified') VERIFIED_ONLY = false;
-        if (key === 'q'){ Q = ''; qEl.value = ''; }
+    mapboxgl.accessToken = 'pk.eyJ1IjoicHJpbWVyZWdlbmVyYXRpdmUiLCJhIjoiY21rZTk1dHB4MDRiYjNlcHBheTJubGh0ayJ9.R9IN8o-u1xnjry7a8BkMsw';
 
-        syncUIFromState();
-        render();
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/dark-v11',
+      center: [-98, 39],
+      zoom: 3.4,
+      renderWorldCopies: false,
+      maxBounds: [[-180, -85], [180, 85]]
+    });
+
+    map.addControl(new mapboxgl.NavigationControl());
+
+    map.on('load', () => {
+      map.resize();
+      map.jumpTo({ center: [-98, 39], zoom: 3.4 });
+    });
+
+    // ============================================
+    // MARKERS
+    // ============================================
+    function createAllMarkers() {
+      AppState.clinics.forEach(clinic => {
+        if (!Number.isFinite(clinic.lat) || !Number.isFinite(clinic.lng)) return;
+
+        const el = document.createElement('div');
+        el.className = 'marker' + (clinic.verified ? ' verified' : '');
+        el.setAttribute('role', 'button');
+        el.setAttribute('tabindex', '0');
+        el.setAttribute('aria-label', `${clinic.name}${clinic.verified ? ' - Prime Verified' : ''}`);
+
+        const handleClick = (e) => {
+          e.stopPropagation();
+          openPanel(clinic);
+          flyToClinic(clinic);
+        };
+
+        el.addEventListener('click', handleClick);
+        el.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleClick(e);
+          }
+        });
+
+        const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
+          .setLngLat([clinic.lng, clinic.lat])
+          .addTo(map);
+
+        AppState.markers.set(clinic.id, marker);
       });
-    });
-  }
+    }
 
-  function syncUIFromState(){
-    document.querySelectorAll('#typeFilter .chip').forEach(chip => {
-      chip.classList.toggle('active', (chip.dataset.type || 'all') === TYPE);
-    });
+    function updateMarkerVisibility() {
+      AppState.clinics.forEach(clinic => {
+        const marker = AppState.markers.get(clinic.id);
+        if (!marker) return;
+        marker.getElement().style.display = passesFilters(clinic) ? '' : 'none';
+      });
+    }
 
-    document.querySelectorAll('#serviceFilter .chip').forEach(chip => {
-      const svc = (chip.dataset.service || '').toLowerCase();
-      chip.classList.toggle('active', SERVICES.has(svc));
-    });
+    function flyToClinic(clinic) {
+      map.flyTo({ center: [clinic.lng, clinic.lat], zoom: 12.5, speed: 1.4, curve: 1.3 });
+    }
 
-    const v = document.getElementById('verifiedOnly');
-    v.checked = VERIFIED_ONLY;
+    // ============================================
+    // PANEL
+    // ============================================
+    function openPanel(clinic) {
+      const logo = clinic.logo_url
+        ? `<img class="panel-logo" src="${escapeHtml(clinic.logo_url)}" alt="${escapeHtml(clinic.name)} logo" loading="lazy">`
+        : `<div class="panel-logo-placeholder" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          </div>`;
 
-    setPills();
-  }
+      const typeLabel = clinic.type === CLINIC_TYPES.FUNCTIONAL ? 'Functional Medicine' : 'Regenerative Medicine';
 
-  function renderList(list){
-    listEl.innerHTML = list.map(c => {
-      const tagClass = c.verified ? 'tag verified' : 'tag';
-      const tagText  = c.verified ? 'Prime Verified' : 'Standard';
-      const cardClass = c.verified ? 'card verified' : 'card';
-      const logo = c.logo_url
-        ? `<img class="cardLogo" src="${c.logo_url}" alt="${c.name} logo">`
-        : `<div class="cardLogo" aria-hidden="true"></div>`;
+      const badge = clinic.verified
+        ? `<span class="panel-badge verified">
+            <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path></svg>
+            Prime Verified
+          </span>`
+        : `<span class="panel-badge standard">Directory Listing</span>`;
 
-      const topSvcs = c.services.slice(0,3).map(s => `<span class="svcPill">${s}</span>`).join('');
+      const phoneBtn = clinic.phone
+        ? `<a href="tel:${escapeHtml(clinic.phone)}" class="contact-btn">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path></svg>
+            ${escapeHtml(clinic.phoneFormatted) || 'Call'}
+          </a>`
+        : '';
+
+      const emailBtn = clinic.email
+        ? `<a href="mailto:${escapeHtml(clinic.email)}" class="contact-btn">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            Email
+          </a>`
+        : '';
+
+      const contactSection = (phoneBtn || emailBtn)
+        ? `<div class="contact-grid">${phoneBtn}${emailBtn}</div>`
+        : '';
+
+      const servicesHtml = clinic.services.length
+        ? `<div class="meta-row">
+            <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"></path></svg>
+            <span>${escapeHtml(clinic.services.join(', '))}</span>
+          </div>`
+        : '';
+
+      DOM.panel.innerHTML = `
+        <div class="panel-header">
+          <div class="panel-brand">
+            ${logo}
+            <div class="panel-title-wrap">
+              <h2 class="panel-title" id="panelTitle">${escapeHtml(clinic.name)}</h2>
+              ${badge}
+            </div>
+          </div>
+          <button type="button" class="panel-close" aria-label="Close panel" id="panelClose">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+        
+        <div class="panel-scroll">
+          <div class="panel-meta">
+            <div class="meta-row">
+              <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+              <span>${escapeHtml(typeLabel)}</span>
+            </div>
+            <div class="meta-row">
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              <span>${escapeHtml(clinic.city || clinic.address)}</span>
+            </div>
+            ${servicesHtml}
+          </div>
+
+          ${clinic.description ? `<div class="panel-description">${escapeHtml(clinic.description)}</div>` : ''}
+
+          ${contactSection}
+
+          <div class="info-cards">
+            <div class="info-card">
+              <div class="info-card-label">New Patients</div>
+              <div class="info-card-value ${clinic.accepting === 'Yes' ? 'yes' : clinic.accepting === 'No' ? 'no' : ''}">${escapeHtml(clinic.accepting)}</div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-label">Telehealth</div>
+              <div class="info-card-value ${clinic.telehealth === 'Yes' ? 'yes' : clinic.telehealth === 'No' ? 'no' : ''}">${escapeHtml(clinic.telehealth)}</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="panel-cta">
+          <a href="${escapeHtml(clinic.website)}" target="_blank" rel="noopener" class="panel-cta-btn">
+            Visit Clinic Website
+            <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+          </a>
+        </div>
+      `;
+
+      DOM.panel.classList.add('open');
+      DOM.panel.setAttribute('aria-hidden', 'false');
+
+      // Close button handler
+      document.getElementById('panelClose').addEventListener('click', closePanel);
+      
+      // Focus the close button for accessibility
+      document.getElementById('panelClose').focus();
+
+      // Close on Escape
+      const escapeHandler = (e) => {
+        if (e.key === 'Escape') {
+          closePanel();
+          document.removeEventListener('keydown', escapeHandler);
+        }
+      };
+      document.addEventListener('keydown', escapeHandler);
+    }
+
+    function closePanel() {
+      DOM.panel.classList.remove('open');
+      DOM.panel.setAttribute('aria-hidden', 'true');
+    }
+
+    // ============================================
+    // ACTIVE FILTER PILLS
+    // ============================================
+    function updatePills() {
+      const pills = [];
+      const hasFilters = AppState.type !== CLINIC_TYPES.ALL || 
+                        AppState.services.size > 0 || 
+                        AppState.verifiedOnly || 
+                        AppState.query;
+
+      if (AppState.type !== CLINIC_TYPES.ALL) {
+        pills.push({ key: 'type', label: `Type: ${AppState.type}` });
+      }
+
+      for (const s of AppState.services) {
+        pills.push({ key: 'svc', value: s, label: s });
+      }
+
+      if (AppState.verifiedOnly) {
+        pills.push({ key: 'verified', label: 'Prime Verified only' });
+      }
+
+      if (AppState.query) {
+        pills.push({ key: 'q', label: `"${AppState.query}"` });
+      }
+
+      const pillsHtml = pills.map(p => `
+        <button type="button" class="pill" data-key="${escapeHtml(p.key)}" data-value="${escapeHtml(p.value || '')}" aria-label="Remove filter: ${escapeHtml(p.label)}">
+          <span class="pill-label">${escapeHtml(p.label)}</span>
+          <span class="pill-close" aria-hidden="true">✕</span>
+        </button>
+      `).join('');
+
+      DOM.activeFilters.innerHTML = pillsHtml + 
+        `<button type="button" class="clear-btn" id="clearBtn" style="${hasFilters ? '' : 'display: none;'}">Clear all</button>`;
+
+      // Re-bind clear button
+      document.getElementById('clearBtn').addEventListener('click', clearAllFilters);
+
+      // Bind pill clicks
+      DOM.activeFilters.querySelectorAll('.pill').forEach(el => {
+        el.addEventListener('click', () => {
+          const key = el.dataset.key;
+          const val = el.dataset.value;
+
+          if (key === 'type') AppState.type = CLINIC_TYPES.ALL;
+          if (key === 'svc') AppState.services.delete(val);
+          if (key === 'verified') AppState.verifiedOnly = false;
+          if (key === 'q') {
+            AppState.query = '';
+            DOM.searchInput.value = '';
+          }
+
+          syncUIFromState();
+          render();
+        });
+      });
+    }
+
+    // ============================================
+    // UI SYNC
+    // ============================================
+    function syncUIFromState() {
+      // Type chips
+      document.querySelectorAll('#typeFilter .chip').forEach(chip => {
+        const isActive = (chip.dataset.type || CLINIC_TYPES.ALL) === AppState.type;
+        chip.classList.toggle('active', isActive);
+        chip.setAttribute('aria-checked', isActive);
+      });
+
+      // Service chips
+      document.querySelectorAll('#serviceFilter .chip').forEach(chip => {
+        const svc = (chip.dataset.service || '').toLowerCase();
+        const isActive = AppState.services.has(svc);
+        chip.classList.toggle('active', isActive);
+        chip.setAttribute('aria-pressed', isActive);
+      });
+
+      // Verified toggle
+      DOM.verifiedOnly.checked = AppState.verifiedOnly;
+
+      updatePills();
+    }
+
+    // ============================================
+    // RENDERING
+    // ============================================
+    function renderClinicCard(clinic) {
+      const tagClass = clinic.verified ? 'status-badge verified' : 'status-badge standard';
+      const tagText = clinic.verified ? 'Verified' : 'Standard';
+      const cardClass = clinic.verified ? 'clinic-card verified' : 'clinic-card';
+
+      const logo = clinic.logo_url
+        ? `<img class="card-logo" src="${escapeHtml(clinic.logo_url)}" alt="" loading="lazy">`
+        : `<div class="card-logo-placeholder" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          </div>`;
+
+      const topServices = clinic.services.slice(0, 3).map(s => 
+        `<span class="service-tag">${escapeHtml(s)}</span>`
+      ).join('');
 
       return `
-        <div class="${cardClass}" data-id="${c.id}">
-          <div class="cardTop">
+        <article class="${cardClass}" data-id="${escapeHtml(clinic.id)}" role="listitem" tabindex="0" aria-label="${escapeHtml(clinic.name)}${clinic.verified ? ' - Prime Verified clinic' : ''}">
+          <div class="card-top">
             ${logo}
-            <div class="cardTitle">
-              <strong>${c.name}</strong>
-              <span>${c.city || c.address}</span>
+            <div class="card-content">
+              <h3 class="card-name">${escapeHtml(clinic.name)}</h3>
+              <p class="card-location">${escapeHtml(clinic.city || clinic.address)}</p>
             </div>
             <span class="${tagClass}">${tagText}</span>
           </div>
-          ${topSvcs ? `<div class="cardServices">${topSvcs}</div>` : ''}
+          ${topServices ? `<div class="card-services">${topServices}</div>` : ''}
+        </article>
+      `;
+    }
+
+    function renderEmptyState() {
+      return `
+        <div class="empty-state">
+          <svg class="empty-state-icon" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <h3 class="empty-state-title">No clinics found</h3>
+          <p class="empty-state-text">Try adjusting your filters or search terms.</p>
         </div>
       `;
-    }).join('');
-
-    listEl.querySelectorAll('.card').forEach(card => {
-      card.addEventListener('click', () => {
-        const id = card.dataset.id;
-        const c = ALL.find(x => x.id === id);
-        if (!c) return;
-        flyToClinic(c);
-        openPanel(c);
-      });
-    });
-  }
-
-  function render(){
-    const list = ALL.filter(passesFilters);
-
-    const verifiedCount = list.filter(c => c.verified).length;
-    const standardCount = list.length - verifiedCount;
-
-    countEl.querySelector('span').textContent = `Showing ${list.length} clinics`;
-    breakdownEl.textContent = `${verifiedCount} Prime Verified • ${standardCount} Standard`;
-
-    updateMarkerVisibility();
-    renderList(list);
-    setPills();
-  }
-
-  function wireUI(){
-    document.querySelectorAll('#typeFilter .chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        TYPE = chip.dataset.type || 'all';
-        syncUIFromState();
-        render();
-      });
-    });
-
-    document.querySelectorAll('#serviceFilter .chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        const svc = (chip.dataset.service || '').toLowerCase();
-        if (!svc) return;
-
-        if (SERVICES.has(svc)) SERVICES.delete(svc);
-        else SERVICES.add(svc);
-
-        syncUIFromState();
-        render();
-      });
-    });
-
-    const v = document.getElementById('verifiedOnly');
-    v.addEventListener('change', () => {
-      VERIFIED_ONLY = !!v.checked;
-      syncUIFromState();
-      render();
-    });
-
-    let searchTimeout;
-    qEl.addEventListener('input', () => {
-      clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(() => {
-        Q = qEl.value.trim().toLowerCase();
-        setPills();
-        render();
-      }, 300);
-    });
-
-    document.getElementById('clearBtn').addEventListener('click', () => {
-      TYPE = 'all';
-      SERVICES = new Set();
-      VERIFIED_ONLY = false;
-      Q = '';
-      qEl.value = '';
-      syncUIFromState();
-      render();
-    });
-
-    map.on('click',()=>panel.classList.remove('open'));
-  }
-
-  async function loadClinics(){
-    countEl.querySelector('span').textContent = 'Loading clinics…';
-    breakdownEl.textContent = '';
-    try{
-      const res = await fetch(ENDPOINT, { cache: 'no-store' });
-      const rows = await res.json();
-      ALL = (Array.isArray(rows) ? rows : []).map(toClinic);
-
-      createAllMarkers();
-      wireUI();
-      syncUIFromState();
-      render();
-    }catch(err){
-      console.error('Failed to load clinics', err);
-      countEl.querySelector('span').textContent = 'Failed to load clinics';
-      breakdownEl.textContent = '';
     }
-  }
 
-  loadClinics();
-</script>
+    function renderList(clinics) {
+      if (clinics.length === 0) {
+        DOM.clinicList.innerHTML = renderEmptyState();
+        return;
+      }
 
+      DOM.clinicList.innerHTML = clinics.map(renderClinicCard).join('');
+
+      // Bind card clicks
+      DOM.clinicList.querySelectorAll('.clinic-card').forEach(card => {
+        const handleCardClick = () => {
+          const id = card.dataset.id;
+          const clinic = AppState.clinics.find(c => c.id === id);
+          if (!clinic) return;
+          flyToClinic(clinic);
+          openPanel(clinic);
+        };
+
+        card.addEventListener('click', handleCardClick);
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleCardClick();
+          }
+        });
+      });
+    }
+
+    function render() {
+      const filteredClinics = AppState.clinics.filter(passesFilters);
+
+      const verifiedCount = filteredClinics.filter(c => c.verified).length;
+      const standardCount = filteredClinics.length - verifiedCount;
+
+      DOM.resultsCount.textContent = `${filteredClinics.length} clinic${filteredClinics.length !== 1 ? 's' : ''} found`;
+      DOM.resultsBreakdown.innerHTML = `<span class="verified-count">${verifiedCount} Verified</span> · ${standardCount} Standard`;
+
+      updateMarkerVisibility();
+      renderList(filteredClinics);
+      updatePills();
+    }
+
+    // ============================================
+    // EVENT HANDLERS
+    // ============================================
+    function clearAllFilters() {
+      AppState.type = CLINIC_TYPES.ALL;
+      AppState.services = new Set();
+      AppState.verifiedOnly = false;
+      AppState.query = '';
+      DOM.searchInput.value = '';
+      syncUIFromState();
+      render();
+    }
+
+    function wireUI() {
+      // Type filter
+      document.querySelectorAll('#typeFilter .chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          AppState.type = chip.dataset.type || CLINIC_TYPES.ALL;
+          syncUIFromState();
+          render();
+        });
+      });
+
+      // Service filter
+      document.querySelectorAll('#serviceFilter .chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const svc = (chip.dataset.service || '').toLowerCase();
+          if (!svc) return;
+
+          if (AppState.services.has(svc)) {
+            AppState.services.delete(svc);
+          } else {
+            AppState.services.add(svc);
+          }
+
+          syncUIFromState();
+          render();
+        });
+      });
+
+      // Verified toggle
+      DOM.verifiedOnly.addEventListener('change', () => {
+        AppState.verifiedOnly = DOM.verifiedOnly.checked;
+        syncUIFromState();
+        render();
+      });
+
+      // Search
+      let searchTimeout;
+      DOM.searchInput.addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          AppState.query = DOM.searchInput.value.trim().toLowerCase();
+          updatePills();
+          render();
+        }, 300);
+      });
+
+      // Clear button
+      DOM.clearBtn.addEventListener('click', clearAllFilters);
+
+      // Map click closes panel
+      map.on('click', closePanel);
+
+      // Mobile filter toggle
+      DOM.mobileFilterToggle.addEventListener('click', () => {
+        const isOpen = DOM.sidebar.classList.toggle('open');
+        DOM.mobileFilterToggle.setAttribute('aria-expanded', isOpen);
+      });
+
+      // Close sidebar when clicking outside on mobile
+      document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 900 && 
+            DOM.sidebar.classList.contains('open') && 
+            !DOM.sidebar.contains(e.target) && 
+            !DOM.mobileFilterToggle.contains(e.target)) {
+          DOM.sidebar.classList.remove('open');
+          DOM.mobileFilterToggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    // ============================================
+    // DATA LOADING
+    // ============================================
+    async function loadClinics() {
+      const ENDPOINT = 'https://script.google.com/macros/s/AKfycbxs9SA3C7rRMgoxWNTFqZ5Ouyy603WpIgczlwvANtlvmHWfCI5QSwXb0BJvax5MqCGF/exec';
+
+      try {
+        const res = await fetch(ENDPOINT, { cache: 'no-store' });
+        
+        if (!res.ok) {
+          throw new Error(`HTTP error: ${res.status}`);
+        }
+        
+        const rows = await res.json();
+        
+        if (!Array.isArray(rows)) {
+          throw new Error('Invalid data format');
+        }
+
+        AppState.clinics = rows.map(toClinic);
+
+        createAllMarkers();
+        wireUI();
+        syncUIFromState();
+        render();
+
+      } catch (err) {
+        console.error('Failed to load clinics:', err);
+        DOM.resultsCount.textContent = 'Failed to load clinics';
+        DOM.resultsBreakdown.textContent = '';
+        DOM.clinicList.innerHTML = `
+          <div class="empty-state">
+            <svg class="empty-state-icon" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <h3 class="empty-state-title">Unable to load clinics</h3>
+            <p class="empty-state-text">Please try refreshing the page.</p>
+          </div>
+        `;
+      }
+    }
+
+    // ============================================
+    // INITIALIZE
+    // ============================================
+    loadClinics();
+  </script>
 </body>
 </html>
