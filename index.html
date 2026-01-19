@@ -1481,9 +1481,16 @@
     map.addControl(new mapboxgl.NavigationControl());
 
     map.on('load', () => {
-      map.resize();
-      map.jumpTo({ center: [-98, 39], zoom: 3.4 });
-    });
+  map.resize();
+
+  const isMobile = window.matchMedia('(max-width: 900px)').matches;
+
+  map.jumpTo({
+    center: [-98, isMobile ? 38 : 39],
+    zoom: isMobile ? 2.7 : 3.4
+  });
+});
+
 
     // ============================================
     // MARKERS
