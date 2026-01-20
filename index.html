@@ -9,7 +9,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
 
   <!-- Mapbox -->
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
@@ -52,7 +52,7 @@
       --shadow-verified: 0 0 0 1px var(--verified-primary), 0 8px 32px rgba(125, 203, 234, 0.2);
       
       /* Typography */
-      --font-display: 'Fraunces', Georgia, serif;
+      --font-display: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       
       /* Spacing */
@@ -192,11 +192,12 @@
       position: sticky;
       top: 0;
       z-index: 5;
-      background: linear-gradient(180deg, var(--bg-primary) 85%, transparent);
+      background: var(--bg-primary);
       padding: var(--space-md) 0 var(--space-lg);
       margin: 0 calc(-1 * var(--space-lg));
       padding-left: var(--space-lg);
       padding-right: var(--space-lg);
+      border-bottom: 1px solid var(--border-subtle);
     }
     
     .search-input-wrap {
@@ -691,7 +692,7 @@
       background: var(--bg-elevated);
       border: 1px solid var(--border-default);
       border-radius: var(--radius-sm);
-      padding: 8px 12px;
+      padding: 10px 14px;
       font-size: 13px;
       color: var(--text-primary);
       pointer-events: none;
@@ -700,8 +701,11 @@
       transform: translate(-50%, -100%) translateY(-12px);
       transition: opacity 0.15s;
       box-shadow: var(--shadow-md);
-      max-width: 220px;
+      max-width: 240px;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
     
     .map-tooltip.visible {
@@ -711,9 +715,18 @@
     .map-tooltip strong {
       display: block;
       color: var(--text-primary);
+      font-weight: 600;
     }
     
-    .map-tooltip span {
+    .map-tooltip .tooltip-verified {
+      display: block;
+      color: var(--verified-primary);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    
+    .map-tooltip .tooltip-city {
+      display: block;
       color: var(--text-muted);
       font-size: 12px;
     }
@@ -721,8 +734,8 @@
     /* Reset map button */
     .reset-map-btn {
       position: fixed;
-      top: 100px;
-      right: 16px;
+      top: 200px;
+      right: 10px;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -1620,10 +1633,10 @@
         source: 'clinics',
         filter: ['==', ['get', 'verified'], false],
         paint: {
-          'circle-radius': 9,
-          'circle-color': '#8899a8',
+          'circle-radius': 7,
+          'circle-color': '#c8d1dc',
           'circle-stroke-width': 2,
-          'circle-stroke-color': 'rgba(255, 255, 255, 0.3)'
+          'circle-stroke-color': 'rgba(255, 255, 255, 0.5)'
         }
       });
 
@@ -1634,7 +1647,7 @@
         source: 'clinics',
         filter: ['==', ['get', 'verified'], true],
         paint: {
-          'circle-radius': 12,
+          'circle-radius': 10,
           'circle-color': '#7DCBEA',
           'circle-stroke-width': 2,
           'circle-stroke-color': '#ffffff'
@@ -1648,7 +1661,7 @@
         source: 'clinics',
         filter: ['==', ['get', 'verified'], true],
         paint: {
-          'circle-radius': 22,
+          'circle-radius': 18,
           'circle-color': 'rgba(125, 203, 234, 0.25)',
           'circle-stroke-width': 0
         }
@@ -1686,10 +1699,22 @@
     function showTooltip(e, tooltip) {
       if (!e.features || !e.features[0]) return;
       const props = e.features[0].properties;
-      const verifiedBadge = props.verified ? ' ✓' : '';
-      tooltip.innerHTML = `<strong>${escapeHtml(props.name)}${verifiedBadge}</strong><br><span>${escapeHtml(props.city || '')}</span>`;
-      tooltip.style.left = e.point.x + 'px';
-      tooltip.style.top = e.point.y + 'px';
+      const verifiedBadge = props.verified ? '<span class="tooltip-verified">Prime Verified ✓</span>' : '';
+      tooltip.innerHTML = `<strong>${escapeHtml(props.name)}</strong>${verifiedBadge}<span class="tooltip-city">${escapeHtml(props.city || '')}</span>`;
+      
+      // Position tooltip, but keep it within the map area (not over sidebar)
+      const sidebarWidth = 420;
+      let x = e.point.x + sidebarWidth; // Account for sidebar
+      const y = e.point.y + 84; // Account for topbar
+      
+      // Keep tooltip on screen
+      const tooltipWidth = 200;
+      if (x < sidebarWidth + tooltipWidth / 2) {
+        x = sidebarWidth + tooltipWidth / 2 + 10;
+      }
+      
+      tooltip.style.left = x + 'px';
+      tooltip.style.top = y + 'px';
       tooltip.classList.add('visible');
     }
 
