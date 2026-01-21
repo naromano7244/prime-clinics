@@ -9,6 +9,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://script.google.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
 
   <!-- Mapbox -->
@@ -1733,6 +1734,15 @@
       scrollToCard(clinic.id);
     }
 
+    function updateGeoJSONSource() {
+      if (!markersInitialized) return;
+      const geojson = createGeoJSONSource();
+      const source = map.getSource('clinics');
+      if (source) {
+        source.setData(geojson);
+      }
+    }
+
     function updateMarkerVisibility() {
       if (!markersInitialized) return;
 
@@ -2232,30 +2242,89 @@
     // ============================================
     // DATA LOADING
     // ============================================
-    async function loadClinics() {
-      const ENDPOINT = 'https://script.google.com/macros/s/AKfycbxs9SA3C7rRMgoxWNTFqZ5Ouyy603WpIgczlwvANtlvmHWfCI5QSwXb0BJvax5MqCGF/exec';
+    const ENDPOINT = 'https://script.google.com/macros/s/AKfycbxs9SA3C7rRMgoxWNTFqZ5Ouyy603WpIgczlwvANtlvmHWfCI5QSwXb0BJvax5MqCGF/exec';
+    const CACHE_KEY = 'primeRegenerativeClinics';
+    const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
+    function getCachedData() {
       try {
-        const res = await fetch(ENDPOINT, { cache: 'no-store' });
-        
-        if (!res.ok) {
-          throw new Error(`HTTP error: ${res.status}`);
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+          const { data, timestamp } = JSON.parse(cached);
+          if (Date.now() - timestamp < CACHE_DURATION) {
+            return data;
+          }
         }
+      } catch (e) {
+        // localStorage not available or corrupted
+      }
+      return null;
+    }
+
+    function setCachedData(data) {
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+          data,
+          timestamp: Date.now()
+        }));
+      } catch (e) {
+        // localStorage full or not available
+      }
+    }
+
+    async function fetchClinicData() {
+      const res = await fetch(ENDPOINT, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+      const rows = await res.json();
+      if (!Array.isArray(rows)) throw new Error('Invalid data format');
+      return rows;
+    }
+
+    function waitForMapLoad() {
+      return new Promise(resolve => {
+        if (map.loaded()) {
+          resolve();
+        } else {
+          map.on('load', resolve);
+        }
+      });
+    }
+
+    async function loadClinics() {
+      try {
+        // Check cache first for instant load
+        const cachedData = getCachedData();
         
-        const rows = await res.json();
+        // Start both operations in parallel
+        const dataPromise = cachedData ? Promise.resolve(cachedData) : fetchClinicData();
+        const mapPromise = waitForMapLoad();
         
-        if (!Array.isArray(rows)) {
-          throw new Error('Invalid data format');
+        // If using cache, also fetch fresh data in background
+        if (cachedData) {
+          fetchClinicData().then(freshData => {
+            setCachedData(freshData);
+            // Update if data changed
+            const freshClinics = freshData.map(toClinic);
+            if (JSON.stringify(freshClinics.map(c => c.id)) !== JSON.stringify(AppState.clinics.map(c => c.id))) {
+              AppState.clinics = freshClinics;
+              updateGeoJSONSource();
+              render();
+            }
+          }).catch(() => {}); // Silently fail background refresh
+        }
+
+        // Wait for both data and map
+        const [rows] = await Promise.all([dataPromise, mapPromise]);
+        
+        // Cache the data if it was freshly fetched
+        if (!cachedData) {
+          setCachedData(rows);
         }
 
         AppState.clinics = rows.map(toClinic);
 
-        // Initialize markers once map is ready
-        if (map.loaded()) {
-          initializeMarkers();
-        } else {
-          map.on('load', initializeMarkers);
-        }
+        // Initialize markers (map is guaranteed loaded now)
+        initializeMarkers();
 
         wireUI();
         syncUIFromState();
